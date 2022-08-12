@@ -1,18 +1,212 @@
-.App-center {
+.App {
   text-align: center;
+}
+.img{
+  width: 200px;
+  height: 200px;
+
+}
+.header{
+  background-color: #D8D8D8;
+  width: 100;
+  height:50px;
+  margin-bottom: 5px;
+  font-style: italic;
+  /* font-size: 1.11vw; */
+  font-size: 15px;
+  /* display: flex;
+  justify-content: space-between; */
+}
+.header > img {
+  width: 1.5vw;
+  height: 1.5vw;
+  float: right;
+  margin-right: 60px;
+  margin-top: 15px;
+}
+
+.profile{
+  background-color: #D8D8D8;
+  width: 24%;
+  height: 230px;
+  float: left;
+  align-items:center; 
+  display: flex; 
+  justify-content:center;
+  
+  font-size: 1.22vw;
+}
+.profile > img {
+  width: 6vw;
+  height: 6vw;
+  margin-right: 10px;
+}
+
+.main{
+  background-color: #D8D8D8;
+  width: 75%;
+  height: 907px;
+  float: right;
+  text-align: left;
+  font-size: 1.00vw;
+}
+#share {
+  margin-right: 60px;
+}
+
+.imgmenu{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 30px;
+    grid-auto-flow: row dense;
+    padding-left: 30px;
+   
+   
+}
+
+.menu{
+  background-color: #D8D8D8;
+  width: 24%;
+  height: 672px;
+  margin-top: 240px;
+  font-size: 1.11vw;
+
+}
+.menu > img {
+  width: 1.5vw;
+  height: 1.5vw;
+  float: left;
+  margin-left: 50px;
+  margin-top: 5px;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+
+/* 화면 줄였을 때 */
+
+@media (max-width:700px){
+  .header{
+    background-color: #D8D8D8;
+    width: 100;
+    height: 50px;
+    margin-bottom: 5px;
+    font-style: italic;
+    font-size: 15px;
+  
+    /* display: flex;
+    justify-content: space-between; */
+  }
+  .header > img {
+    width: 2vw;
+    height: 2vw;
+    float: right;
+    margin-right: 30px;
+    margin-top: 15px;
+  }
+  
+  .profile{
+    background-color: #D8D8D8;
+    width: 24%;
+    height: 170px;
+    float: left;
+    text-align: center;
+    align-items:center; 
+    justify-content:center;
+    
+    font-size: 1.0vw;
+    display: grid;
+  }
+  .profile > img {
+    width: 9vw;
+    height: 9vw;
+    align-items: center;
+    justify-content: center;
+    
+    margin-left: 23px;
+    margin-top: 30px;
+  }
+  
+  .profile > h1 , h4{
+    margin-bottom: 45px;
+    
+  }
+ 
+
+  .main{
+    background-color: #D8D8D8;
+    width: 75%;
+    height: 907px;
+    float: right;
+    text-align: left;
+    font-size: 1.00vw;
+  }
+  #share {
+    margin-right: 25px;
+  }
+  .imgmenu{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 10px;
+      grid-auto-flow: row dense;
+      padding-left: 30px;
+     
+     
+  }
+  
+  .menu{
+    background-color: #D8D8D8;
+    width: 24%;
+    height: 732px;
+    margin-top: 180px;
+    font-size: 1.0vw;
+    
+    
+  }
+  .menu > img {
+    margin-top: 4px;
+    margin-left: 20px;
+    margin-right: 5px;
+   
+  }
+  .menu > h2 {
+   
+    margin-top: 1px;
+    margin-right: 20px;
+  }
+}
+
+
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-}
-
-.App-title {
-  margin-left: 5vmin;
-  font-size: calc(15px + 2vmin);
+  color: white;
 }
 
 .App-link {
   color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

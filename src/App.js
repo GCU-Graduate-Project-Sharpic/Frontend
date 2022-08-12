@@ -1,82 +1,88 @@
+import { Component } from "react";
+import Modal from "./Modal";
 import './App.css';
-import React from 'react';
-import axios from 'axios';
 
-import Login from './components/Login'
-import Signup from './components/Signup'
-import MainPgae from './components/MainPage'
+class App extends Component {
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLogin: false,
-      isSignup: false,
-      userData: null,
-    };
-    this.loginHandler = this.loginHandler.bind(this);
-    this.signupHandler = this.signupHandler.bind(this);
-    this.logoutHandler = this.logoutHandler.bind(this);
-    this.setUserInfo = this.setUserInfo.bind(this);
-    axios.get("http://localhost:8005/user")
-      .then((res)=>{
-        if(res.data.username !== "Not Login") {
-          this.setUserInfo(res.data);
-          this.loginHandler();
-        }
-      })
-      .catch((err) => alert(err));
- }
-
-  loginHandler() {
-    this.setState({
-      isLogin: true,
-    });
-  }
-
-  setUserInfo(object) {
-    this.setState({ userData: object });
-  }
-
-  signupHandler() {
-    if (this.state.isSignup === false) {
-      this.setState({ isSignup: true });
-    } else {
-      this.setState({ isSignup: false })
+  
+    constructor(props) {
+        super(props);
+        this.state = {
+            contents: ['myeongdong.jpg', 'seoultower.jpg', 'dongdaemoon.jpg', 'seoulcici.jpg'],
+            index: null,
+      
+            hasModal: false,
+        };
     }
-  }
 
-  logoutHandler() {
-    this.setState({
-      isLogin: false,
-    });
-  }
+    controlModal = (index) => {
+        this.setState({
+            index: index,
+            hasModal: !this.state.hasModal
+        });
+    }
 
-  render() {
-    const { isLogin, isSignup } = this.state;
-    return (
-      <div>
-        {isLogin ? ( // check login for render page
-          <MainPgae
-            logoutHandler={this.logoutHandler}
-            userData={this.state.userData}
-          />
-        ) : (
-          isSignup ? (
-            <Signup
-              signupHandler={this.signupHandler}
-            />
-          ) : (
-          <Login
-            loginHandler={this.loginHandler}
-            signupHandler={this.signupHandler}
-            setUserInfo={this.setUserInfo}
-          />
+    render() {
+        const images = this.state.contents.map((image, index) =>
+            <img
+            style={{width:'13vw', height:'13vw'}}
+            key={index} onClick={() => this.controlModal(index)} src={image} alt="alt" />
         )
-        )}
+        return (
+            <div>
+              <div className="App">
+
+          
+      <div className="header">
+      <img alt="setting" src="settings.png"/>
+
+        <h1 style={{textAlign:"center" }}>Sharpic</h1>
       </div>
-    );
-  }
+
+      <div className="main">
+      <div className="imagetitle">
+      <img style={{width:"3vw", height:"3vw", marginLeft:"30px" ,marginRight:"10px", float:"left" }} alt="book" src="book.png"/>
+      <img id ="share" style={{width:"1.5vw", height:"1.5vw", marginTop:"5px" ,marginLeft:"10px" , float:"right" }} alt="friend" src="friend.png"/>
+      <img style={{width:"1.5vw", height:"1.5vw", marginTop:"5px" ,marginLeft:"10px" ,marginRight:"10px", float:"right" }} alt="share" src="share.png"/>
+      <img style={{width:"1.5vw", height:"1.5vw", marginTop:"5px" ,marginLeft:"10px" ,marginRight:"10px", float:"right" }} alt="menu" src="menu.png"/>
+      <img style={{width:"1.5vw", height:"1.5vw", marginTop:"5px" , marginLeft:"10px" ,marginRight:"10px", float:"right" }} alt="menu2" src="menu2.png"/>
+        <h1 style={{marginLeft: "40px", marginTop: "20px"}}>Seoul Travel</h1>
+        </div>
+
+        <div className='imgmenu'>
+         {images}
+                {this.state.hasModal && (
+                    <Modal images={this.state.contents} index={this.state.index} close={this.controlModal}></Modal>
+                )}
+        </div>
+      </div>
+
+
+      <div className="profile">
+        <img  alt="Profile" src="user.png"/>
+        <div>
+        <h1>James</h1>
+        <h4 style={{}}>example@gmail.com</h4>        
+        </div>
+      </div>
+
+
+      <div className="menu">
+      <img alt="book" src="book.png"/>
+        <h2 >Seoul Travel</h2>
+        <img alt="book" src="book2.png"/>
+        <h2>Tokyo Travel</h2>
+        <img alt="book" src="book2.png"/>
+        <h2>Busan Travel</h2>
+      </div>
+    
+    </div> 
+            </div>
+        );
+    }
 }
+
+
+
 
 export default App;
