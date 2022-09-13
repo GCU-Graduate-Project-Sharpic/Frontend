@@ -30,12 +30,14 @@ class ReactImageUploadComponent extends React.Component {
     this.onDropFile = this.onDropFile.bind(this);
     this.onUploadClick = this.onUploadClick.bind(this);
     this.triggerFileUpload = this.triggerFileUpload.bind(this);
+    
   }
-
+/**바뀔때마다 */
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevState.files !== this.state.files) {
       this.props.onChange(this.state.files, this.state.pictures);
     }
+    
   }
 
   /*
@@ -45,6 +47,7 @@ class ReactImageUploadComponent extends React.Component {
     if (nextProps.defaultImages !== this.props.defaultImages) {
       this.setState({ pictures: nextProps.defaultImages });
     }
+    
   }
 
   /*
@@ -106,6 +109,7 @@ class ReactImageUploadComponent extends React.Component {
 
       this.setState({ pictures: dataURLs, files: files });
     });
+    console.log("Image Upload Success");
   }
 
   onUploadClick(e) {
@@ -143,6 +147,7 @@ class ReactImageUploadComponent extends React.Component {
     this.setState({ pictures: filteredPictures, files: filteredFiles }, () => {
       this.props.onChange(this.state.files, this.state.pictures);
     });
+    console.log("Image Delete Success");
   }
 
   /*
