@@ -1,101 +1,70 @@
-# Images uploader UI component
+# Getting Started with Create React App
 
-Simple component for upload and validate (client side) images with preview built with React.js.
-This package use ['react-flip-move'](https://github.com/joshwcomeau/react-flip-move) for animate the file preview images.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Installation
+## Available Scripts
 
-```bash
-npm install --save react-images-upload
-```
+In the project directory, you can run:
 
-## Usage
-### Using Classes
-```javascript
-import React from "react";
-import ImageUploader from "react-images-upload";
+### `npm start`
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { pictures: [] };
-    this.onDrop = this.onDrop.bind(this);
-  }
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-  onDrop(pictureFiles, pictureDataURLs) {
-    this.setState({
-      pictures: this.state.pictures.concat(pictureFiles)
-    });
-  }
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-  render() {
-    return (
-      <ImageUploader
-        withIcon={true}
-        buttonText="Choose images"
-        onChange={this.onDrop}
-        imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-        maxFileSize={5242880}
-      />
-    );
-  }
-}
-```
-### Using Hooks
-```javascript
-import React, { useState } from "react";
-import ImageUploader from "react-images-upload";
+### `npm test`
 
-const App = props => {
-  const [pictures, setPictures] = useState([]);
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-  const onDrop = picture => {
-    setPictures([...pictures, picture]);
-  };
-  return (
-    <ImageUploader
-      {...props}
-      withIcon={true}
-      onChange={onDrop}
-      imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-      maxFileSize={5242880}
-    />
-  );
-};
+### `npm run build`
 
-export default App;
-```
-### Available Options
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-|    parameter    |   type   |              default               | description                                                   |
-| :-------------: | :------: | :--------------------------------: | :------------------------------------------------------------ |
-|    className    |  String  |                 -                  | Class name for the input.                                     |
-|    onChange     | Function |                 -                  | On change handler for the input.                              |
-| buttonClassName |  String  |                 -                  | Class name for upload button.                                 |
-|  buttonStyles   |  Object  |                 -                  | Inline styles for upload button.                              |
-|   withPreview   | Boolean  |               false                | Show preview of selected images.                              |
-|  defaultImages  |  Array   |       ['imgUrl1', 'imgUrl2']       | Pre-populate with default images.                             |
-|     accept      |  String  |         "accept=image/\*"          | Accept attribute for file input.                              |
-|      name       |  String  |                 -                  | Input name.                                                   |
-|    withIcon     | Boolean  |                true                | If true, show upload icon on top                              |
-|   buttonText    |  String  |          'Choose images'           | The text that display in the button.                          |
-|   buttonType    |  String  |              'submit'              | The value of the button's "type" attribute.                   |
-|    withLabel    | Boolean  |                true                | Show instruction label                                        |
-|      label      |  String  | 'Max file size: 5mb, accepted: jpg, gif, png |         Label text                                  |
-|   labelStyles   |  Object  |                 -                  | Inline styles for the label.                                  |
-|   labelClass    |  string  |                 -                  | Class name for the label                                      |
-|  imgExtension   |  Array   |  ['.jpg', '.gif', '.png', '.gif']  | Supported image extension (will use in the image validation). |
-|   maxFileSize   |  Number  |              5242880               | Max image size.                                               |
-|  fileSizeError  |  String  |      " file size is too big"       | Label for file size error message.                            |
-|  fileTypeError  |  String  | " is not supported file extension" | Label for file extension error message.                       |
-|   errorClass    |  String  |                 -                  | Class for error messages                                      |
-|   errorStyle    |  Object  |                 -                  | Inline styles for errors                                      |
-|   singleImage   | Boolean  |               false                | Upload one single image                                       |
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-### Development
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-Clone the repo and run `npm ci`. Start development server with `npm start`.
+### `npm run eject`
 
-### License
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-MIT
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
