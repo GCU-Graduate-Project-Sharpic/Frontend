@@ -1,9 +1,41 @@
 import React from 'react';
+import axios from 'axios';
 import ImageUploader from './component/index.js';
 
-
-
 export default class Main extends React.PureComponent {
+    constructor(props) {
+    super(props);
+    this.state = { pictures: [] };
+    this.onDrop = this.onDrop.bind(this);
+  }
+
+  onDrop(pictureFiles, pictureDataURLs) {
+    this.setState({
+      pictures: this.state.pictures.concat(pictureFiles)
+    });
+    console.log(pictureFiles[0]);
+    const frm = new FormData();
+    frm.append("images", pictureFiles[0]);
+    axios
+	.post("/image", frm, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        if (res.status == "files uploaded!") {
+          window.alert("Image uploaded")
+        } else {
+          console.log(res.status)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        window.alert("게시물 작성에 실패했습니다.");
+      });
+  }
+
+
     render() {
         return (
             <div>
@@ -31,7 +63,8 @@ export default class Main extends React.PureComponent {
 
                         <div className='imgmenu'>
                             <ImageUploader style={{ maxWidth: '800px', margin: "10px auto" }}
-                                withPreview={true} />
+                                withPreview={true}
+                                onChange={this.onDrop} />
                         </div>
 
 

@@ -36,7 +36,7 @@ class Register extends Component{
       .then((res) => {
         console.log(res.data)
         if (res.data.status === 'signup success') {
-            window.location.replace("/")
+            window.location.replace("/login")
         } else {
           console.log("wrong data");
         }
