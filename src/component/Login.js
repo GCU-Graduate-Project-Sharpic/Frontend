@@ -39,7 +39,7 @@ class Login extends Component{
         //   email: email,
         // });
         if (res.data.status === 'login success'){
-          console.log(`username는 : ${this.state.username}\npw는 : ${this.state.password}`);
+          window.location.pathname="/";
         } else{
           console.log('wrong data');
         }
