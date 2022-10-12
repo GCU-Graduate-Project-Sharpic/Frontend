@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import axios from 'axios';
 import "./Login.css";
 
-class Login extends Component{
-  state={
-    username:'',
-    password:''
+class Login extends Component {
+  state = {
+    username: '',
+    password: ''
   }
 
   appChange = (e) => {
@@ -16,7 +16,7 @@ class Login extends Component{
   appClick = () => {
     axios
       .post( // Login request
-        'http://localhost:8005/login',
+        'https://sharpic.chromato99.com/login',
         {
           username: this.state.username,
           password: this.state.password,
@@ -24,23 +24,10 @@ class Login extends Component{
         },
         { 'Content-Type': 'application/json', withCredentials: true }
       )
-      // .then((res) => {
-      //   this.props.loginHandler(true);
-      //   // get user info
-      //   return axios.get('http://localhost:8005/user', {
-      //     withCredentials: true,
-      //   });
-      // })
       .then((res) => {
-        // console.log(res.data)
-        // let { username, email } = res.data;
-        // this.props.setUserInfo({ // set user info
-        //   username: username,
-        //   email: email,
-        // });
-        if (res.data.status === 'login success'){
-          window.location.pathname="/";
-        } else{
+        if (res.data.status === 'login success') {
+          window.location.pathname = "/";
+        } else {
           console.log('wrong data');
         }
       })
@@ -52,7 +39,7 @@ class Login extends Component{
       this.appClick();
     }
   }
-  register=(e)=>{
+  register = (e) => {
     window.location.replace("/signup")
   }
   render() {
@@ -64,8 +51,8 @@ class Login extends Component{
           <h1 className="title">
             Sharpic
           </h1>
-          <input type="text" name="username" placeholder= "Email Address" value={username} onChange={appChange} className="component border-2px-black email-address valign-text-middle roboto-normal-black-15px"/>  
-          <input type="password" name="password" placeholder= "Password" value={password} onChange={appChange} onKeyPress={appKeyPress}className="overlap-group border-2px-black password valign-text-middle roboto-normal-black-15px"/>
+          <input type="text" name="username" placeholder="Email Address" value={username} onChange={appChange} className="component border-2px-black email-address valign-text-middle roboto-normal-black-15px" />
+          <input type="password" name="password" placeholder="Password" value={password} onChange={appChange} onKeyPress={appKeyPress} className="overlap-group border-2px-black password valign-text-middle roboto-normal-black-15px" />
           <button onClick={register} className="button place valign-text-middle">REGISTER</button>
           <button onClick={appClick} className="button-1 log-in valign-text-middle">LOG IN</button>
         </div>

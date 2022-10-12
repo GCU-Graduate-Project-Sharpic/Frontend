@@ -6,54 +6,54 @@ import ReactDOM from "react-dom";
 export default function App() {
 
   const [images, setImages] = React.useState([]);
+  const [imageIds, setImageIds] = React.useState([]);
   const maxNumber = 69;
+  React.useEffect(() => {
+    axios.get("https://sharpic.chromato99.com/image/list")
+      .then((res) => {
+        if (res.data.list != null) {
+          setImageIds(res.data.list);
+        }
+      });
+  }, []);
+
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-    console.log(imageList, addUpdateIndex);
+    var ori_img_length = images.length;
     setImages(imageList);
+    const frm = new FormData();
+    for (var img of imageList.slice(ori_img_length)) {
+      frm.append("images", img.file);
+    }
+    axios
+      .post("https://sharpic.chromato99.com/image", frm, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        if (res.status === "files uploaded!") {
+          window.alert("Image uploaded")
+        } else {
+          console.log(res.status)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        window.alert("Fail to upload image");
+      });
   };
-
-
-  // onDrop(pictureFiles, pictureDataURLs) {
-  //   this.setState({
-  //     pictures: this.state.pictures.concat(pictureFiles)
-  //   });
-  //   console.log(pictureFiles[0]);
-  //   const frm = new FormData();
-  //   frm.append("images", pictureFiles[0]);
-  //   axios
-  // .post("/image", frm, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     })
-  //     .then((res) => {
-  //       if (res.status == "files uploaded!") {
-  //         window.alert("Image uploaded")
-  //       } else {
-  //         console.log(res.status)
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       window.alert("게시물 작성에 실패했습니다.");
-  //     });
-  // }
 
   return (
     <div>
       <div className="App">
-
         {/* header */}
         <div className="header">
           <img alt="setting" src="settings.png" />
-
           <h1 style={{ textAlign: "center" }}>Sharpic</h1>
         </div>
 
-
         <div className="main">
-
           <div className="imagetitle">
             <img style={{ width: "3vw", height: "3vw", marginLeft: "30px", marginRight: "10px", float: "left" }} alt="book" src="book.png" />
             <img id="share" style={{ width: "1.5vw", height: "1.5vw", marginTop: "5px", marginLeft: "10px", float: "right" }} alt="friend" src="friend.png" />
@@ -64,6 +64,16 @@ export default function App() {
             <h1 style={{ marginLeft: "40px", marginTop: "20px" }}>Seoul Travel</h1>
           </div>
 
+          <div id="image-grid">
+            {imageIds.map((imageId, index) => (
+              <div key={index + "-grid"} className="image" style={{ float: 'left' }}>
+                <a href={"https://sharpic.chromato99.com/image/" + imageId} target="_blank" rel="noreferrer">
+                  <img src={"https://sharpic.chromato99.com/image/" + imageId} alt="" width="200" />
+                </a>
+              </div>
+            ))}
+          </div>
+
           <div className='imgmenu'>
             <ImageUploading
               multiple
@@ -71,7 +81,6 @@ export default function App() {
               onChange={onChange}
               maxNumber={maxNumber}
               dataURLKey="data_url"
-              acceptType={["jpg"]}
             >
               {({
                 imageList,
@@ -106,10 +115,7 @@ export default function App() {
               )}
             </ImageUploading>
           </div>
-
-
         </div>
-
 
         <div className="profile">
           <img alt="Profile" src="user.png" />
@@ -119,7 +125,6 @@ export default function App() {
           </div>
         </div>
 
-
         <div className="menu">
           <img alt="book" src="book.png" />
           <h2 >Seoul Travel</h2>
@@ -128,10 +133,7 @@ export default function App() {
           <img alt="book" src="book2.png" />
           <h2>Busan Travel</h2>
         </div>
-
       </div>
     </div>
-
   );
 }
-
