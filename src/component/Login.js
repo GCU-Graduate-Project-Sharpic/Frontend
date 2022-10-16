@@ -16,7 +16,7 @@ class Login extends Component {
   appClick = () => {
     axios
       .post( // Login request
-        'https://sharpic.chromato99.com/login',
+        window.location.href,
         {
           username: this.state.username,
           password: this.state.password,

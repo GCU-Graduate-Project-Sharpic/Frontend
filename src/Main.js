@@ -9,7 +9,7 @@ export default function App() {
   const [imageIds, setImageIds] = React.useState([]);
   const maxNumber = 69;
   React.useEffect(() => {
-    axios.get("https://sharpic.chromato99.com/image/list")
+    axios.get(window.location.href + "image/list")
       .then((res) => {
         if (res.data.list != null) {
           setImageIds(res.data.list);
@@ -26,7 +26,7 @@ export default function App() {
       frm.append("images", img.file);
     }
     axios
-      .post("https://sharpic.chromato99.com/image", frm, {
+      .post(window.location.href + "image", frm, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -67,8 +67,8 @@ export default function App() {
           <div id="image-grid">
             {imageIds.map((imageId, index) => (
               <div key={index + "-grid"} className="image" style={{ float: 'left' }}>
-                <a href={"https://sharpic.chromato99.com/image/" + imageId} target="_blank" rel="noreferrer">
-                  <img src={"https://sharpic.chromato99.com/image/" + imageId} alt="" width="200" />
+                <a href={window.location.href + "image/" + imageId} target="_blank" rel="noreferrer">
+                  <img src={window.location.href + "image/" + imageId} alt="" width="200" />
                 </a>
               </div>
             ))}

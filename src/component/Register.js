@@ -25,7 +25,7 @@ class Register extends Component {
   confirm = (e) => {
     axios
       .post( // Login request
-        'https://sharpic.chromato99.com/signup',
+        window.location.href,
         {
           username: this.state.username,
           password: this.state.password,
