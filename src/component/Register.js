@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import axios from 'axios';
 import "./Login.css";
 
-class Register extends Component{
-  state={
-    username:'',
-    password:'',
+class Register extends Component {
+  state = {
+    username: '',
+    password: '',
     email: ''
   }
 
@@ -22,10 +22,10 @@ class Register extends Component{
       this.appClick();
     }
   }
-  confirm=(e)=>{
+  confirm = (e) => {
     axios
       .post( // Login request
-        'http://localhost:8005/signup',
+        window.location.href,
         {
           username: this.state.username,
           password: this.state.password,
@@ -36,7 +36,7 @@ class Register extends Component{
       .then((res) => {
         console.log(res.data)
         if (res.data.status === 'signup success') {
-            window.location.replace("/login")
+          window.location.replace("/login")
         } else {
           console.log("wrong data");
         }
@@ -52,10 +52,10 @@ class Register extends Component{
           <h1 className="title">
             Sharpic
           </h1>
-          <input type="text" name="username" placeholder= "Email Address" value={username} onChange={appChange} className="component border-2px-black email-address valign-text-middle roboto-normal-black-15px"/>  
-          <input type="password" name="password" placeholder= "Password" value={password} onChange={appChange} className="overlap-group border-2px-black password valign-text-middle roboto-normal-black-15px"/>
-          <input type="text" name="email" placeholder= "Nickname" value={email} onChange={appChange} onKeyPress={appKeyPress} className="component border-2px-black email-address valign-text-middle roboto-normal-black-15px"/>  
-         <button onClick={confirm} className="button-1 log-in valign-text-middle">CONFIRM</button>
+          <input type="text" name="username" placeholder="Email Address" value={username} onChange={appChange} className="component border-2px-black email-address valign-text-middle roboto-normal-black-15px" />
+          <input type="password" name="password" placeholder="Password" value={password} onChange={appChange} className="overlap-group border-2px-black password valign-text-middle roboto-normal-black-15px" />
+          <input type="text" name="email" placeholder="Nickname" value={email} onChange={appChange} onKeyPress={appKeyPress} className="component border-2px-black email-address valign-text-middle roboto-normal-black-15px" />
+          <button onClick={confirm} className="button-1 log-in valign-text-middle">CONFIRM</button>
         </div>
       </div>
     );
