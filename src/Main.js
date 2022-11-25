@@ -13,12 +13,11 @@ import Badge from 'react-bootstrap/Badge';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import Modal from 'react-bootstrap/Modal';
+import Offcanvas from 'react-bootstrap/Offcanvas';
 
 import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
 
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 import Stack from 'react-bootstrap/Stack';
 // import React, { useEffect, useState } from 'react';
@@ -41,10 +40,19 @@ export default function App() {
    */
 
   /**
+   * offCanvas
+   */
+
+   const [show, setShow] = useState(false);
+
+   const handleClose = () => setShow(false);
+   const handleShow = () => setShow(true);
+
+  /**
    * delete button & modal
    */
-  const [show, setShow] = useState(false);
-
+  const [name, setName] = useState('Name');
+  const [mail, setMail] = useState('Mail');
 
   const [images, setImages] = React.useState([]);
   const [imageIds, setImageIds] = React.useState([]);
@@ -58,9 +66,70 @@ export default function App() {
       });
   }, []);
 
-  const body = document.querySelector('body');
-  const modal = document.querySelector('.modal');
-  const btnOpenPopup = document.querySelector('.btn-open-popup');
+  window.onload = function () {
+    const body = document.querySelector('body');
+    const modal = document.querySelector('.modal');
+    const btnOpenPopup = document.querySelector('.btn-open-popup');
+    const updateAccount = document.querySelector('.updateAccount');
+    const albumSetting = document.querySelector('.albumSetting');
+    const offcanvas = document.querySelector('.offcanvas');
+
+    const list2 = document.querySelector('.list2');
+    const list3 = document.querySelector('.list3');
+    const list4 = document.querySelector('.list4');
+    const list5 = document.querySelector('.list5');
+
+    var current_list = 1;  // 현재 선택된 리스트
+
+
+    btnOpenPopup.addEventListener('click', () => {
+      modal.classList.toggle('show');
+
+      if (modal.classList.contains('show')) {
+        body.style.overflow = 'hidden';
+      }
+    });
+
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        modal.classList.toggle('show');
+
+        if (!modal.classList.contains('show')) {
+          body.style.overflow = 'auto';
+        }
+      }
+    });
+    updateAccount.addEventListener('click', () => {
+      var name = document.f.name.value;
+      var mail = document.f.mail.value;
+
+     
+      setMail(mail);
+      setName(name);
+    });
+
+    albumSetting.addEventListener('click', () => {
+
+        if (current_list == 1) {
+            list2.style.display = "block";
+            current_list += 1;
+        } else if (current_list == 2) {
+            list3.style.display = "block";
+            current_list += 1;
+        }
+    });
+
+    offcanvas.addEventListener('click', () => {
+        if (current_list == 2) {
+            list2.style.display = "none";
+            current_list -= 1;
+        } else if (current_list == 3) {
+            list3.style.display = "none";
+            current_list -= 1;
+        }
+    });
+
+  }
 
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
@@ -96,10 +165,11 @@ export default function App() {
 
 
         <Stack gap={2}>
-          <div className="bg-light border">
+          <div className="bg-light border" style={{maxWidth: '1200px', flex: 'center'}}>
             {/** Header */}
             <Navbar bg="light" expand="lg">
               <Container>
+                <Button className='offcanvas' onClick={handleShow} style={{'marginRight': '20px', fontWeight: "bold"}}>三</Button>
                 <Navbar.Brand href="#home">Sharpic</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
@@ -138,45 +208,59 @@ export default function App() {
                     <div className="modal_body" style={{ textAlign: "left" }}>
                       <h1 style={{ color: "blue", fontWeight: "bold" }}>개인정보</h1>
 
+                      <form name="f">
+                        <p style={{ fontWeight: "bold" }}>Name : &nbsp;&nbsp; <input type="text" name="name" placeholder="hong gil dong" /></p>
+                        <p style={{ fontWeight: "bold" }}>Mail :&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<input type="text" name="mail" placeholder="hong@gmail.com" /></p>
+                        <p style={{ fontWeight: "bold" }}>age :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="age" placeholder="20" /></p>
+                        <p style={{ fontWeight: "bold" }}>gender :&nbsp; <input type="text" name="gender" placeholder="M" /></p>
 
-                      <p style={{ fontWeight: "bold" }}>Name : &nbsp;&nbsp; <input type="text" name="name" placeholder="hong gil dong" /></p>
-                      <p style={{ fontWeight: "bold" }}>Mail :&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<input type="text" name="mail" placeholder="hong@gmail.com" /></p>
-                      <p style={{ fontWeight: "bold" }}>age :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="age" placeholder="20" /></p>
-                      <p style={{ fontWeight: "bold" }}>gender :&nbsp; <input type="text" name="gender" placeholder="M" /></p>
 
-
-                      <br></br><br></br><br></br><br></br>
-                      <p><input type="button" style={{ display: "block", margin: "auto", width: "200px", backgroundColor: "blue", color: "white" }} value="변경" onClick="send_go()" /></p>
+                        <br></br><br></br><br></br><br></br>
+                        <Button variant="primary" className="updateAccount">변경</Button>
+                      </form>
+                      
+                      {/* <p><input type="button" style={{ display: "block", margin: "auto", width: "200px", backgroundColor: "blue", color: "white" }} value="변경" onClick="send_go()" /></p> */}
                     </div>
                   </div>
+
+
                   {/** Add some margin */}
-                  <Card style={{ marginTop: '10px', marginLeft: '10px', height: "55rem", width: "26rem" }}>
+
+
+
+
+                  <Card style={{ marginTop: '10px', marginLeft: '10px', height: "55rem", width: "21rem" }}>
                     <Card.Body>
-                      <Card.Title>User Name</Card.Title>
-                      <Card.Text>
-                        User information
-                      </Card.Text>
-                      <Button variant="primary" className="btn-open-popup" onClick={Account()}>my Account</Button>
+
+                      <Card.Title>{ name }</Card.Title>
+                      <Card.Text>{ mail }</Card.Text>
+                      <Button  className="btn-open-popup">my Account</Button>
+                      <br></br><br></br>
 
                       {/**Add dividor line */}
                       <hr></hr>
 
-                      <ListGroup as="ol" numbered>
+                      <ListGroup as="ol">
+
+                      <Button name="albumButton" className="albumSetting" style={{marginBottom: '10px'}}>Add album</Button>
                         <ListGroup.Item
                           as="li"
-                          className="d-flex justify-content-between align-items-start"
+                          className="list1"
                         >
                           <div className="ms-2 me-auto">
-                            <div className="fw-bold">Seoul Travel</div>
-                            서울여행집
+                            <div className="fw-bold">All images</div>
+                            모든 내 사진
                           </div>
                           <Badge bg="primary" pill>
                             속한 사진 숫자
                           </Badge>
                         </ListGroup.Item>
+
+
                         <ListGroup.Item
                           as="li"
-                          className="d-flex justify-content-between align-items-start"
+                          className="list2" 
+                          style={{display: 'none'}}
                         >
                           <div className="ms-2 me-auto">
                             <div className="fw-bold">Tokyo Travel</div>
@@ -186,9 +270,12 @@ export default function App() {
                             속한 사진 숫자
                           </Badge>
                         </ListGroup.Item>
+
+
                         <ListGroup.Item
                           as="li"
-                          className="d-flex justify-content-between align-items-start"
+                          className="list3"
+                          style={{display: 'none'}}
                         >
                           <div className="ms-2 me-auto">
                             <div className="fw-bold">New york Travel</div>
@@ -201,6 +288,8 @@ export default function App() {
                       </ListGroup>
                     </Card.Body>
                   </Card>
+
+
                 </div>
 
                 <div style={{ width: '2000px', height: '850px' }}> {/** Main body */}
@@ -287,7 +376,7 @@ export default function App() {
                                 <div key={index} width="100%" style={{ marginTop: '10px' }}>
                                   <ReactCompareSlider
                                     itemOne={<ReactCompareSliderImage src={image.data_url} alt="Image one" />}
-                                    itemTwo={<ReactCompareSliderImage src={image.data_url}  style={{filter:"grayscale(1)"}} alt="Image two" />}
+                                    itemTwo={<ReactCompareSliderImage src={image.data_url} style={{ filter: "grayscale(1)" }} alt="Image two" />}
                                   />
                                   <div className="image-item__btn-wrapper" width="200">
 
@@ -301,24 +390,6 @@ export default function App() {
 
                                     <>
                                       <Button variant='danger' onClick={() => onImageRemove(index)}>Remove</Button>
-                                      {/* <Modal show={show} onHide={() => setShow(false)}>
-                                        <Modal.Header closeButton>
-                                          <Modal.Title>Remove</Modal.Title>
-                                          <Modal.Body>Are you sure remove this picture?</Modal.Body>
-                                          <Modal.Footer>
-                                            <Button variant='secondary' onClick={() => setShow(false)}>
-                                              No
-                                            </Button>
-                                            <Button onClick={() => {
-                                              console.log(index);
-                                              onImageRemove(index);
-                                              setShow(false);
-                                            }}>
-                                              Yes
-                                            </Button>
-                                          </Modal.Footer>
-                                        </Modal.Header>
-                                      </Modal> */}
                                     </>
                                   </div>
                                 </div>
@@ -331,23 +402,6 @@ export default function App() {
                       </div>
 
 
-                    </Row>
-
-                    <Row>
-                      {/** https://www.npmjs.com/package/img-comparison-slider */}
-                      <script
-                        defer
-                        src="https://unpkg.com/img-comparison-slider@7/dist/index.js"
-                      ></script>
-                      <link
-                        rel="stylesheet"
-                        href="https://unpkg.com/img-comparison-slider@7/dist/styles.css"
-                      />
-
-                      <img-comparison-slider>
-                        <img slot="first" src="./figures/human_face.png" />
-                        <img slot="second" src="./figures/human_face.png" />
-                      </img-comparison-slider>
                     </Row>
 
                   </Container>
@@ -372,35 +426,8 @@ export default function App() {
     </div>
   );
 
-  function Account() {
-    btnOpenPopup.addEventListener('click', () => {
-      modal.classList.toggle('show');
-
-      if (modal.classList.contains('show')) {
-        body.style.overflow = 'hidden';
-      }
-    });
-
-    modal.addEventListener('click', (event) => {
-      if (event.target === modal) {
-        modal.classList.toggle('show');
-
-        if (!modal.classList.contains('show')) {
-          body.style.overflow = 'auto';
-        }
-      }
-    });
-  }
-  function send_go() {
-    var name = document.f.name.value;
-    var mail = document.f.mail.value;
-    var age = document.f.age.value;
-    var gender = document.f.gender.value;
-    document.getElementById("res1").innerHTML = name;
-    document.getElementById("res2").innerHTML = mail;
-    document.getElementById("res3").innerHTML = age;
-    document.getElementById("res4").innerHTML = gender;
 
 
-  }
+
+
 }
