@@ -28,12 +28,12 @@ export default function App() {
   /**
    * Radio buttons 
    */
-  const [radioValue, setRadioValue] = React.useState('1');
+  const [radioValue, setRadioValue] = React.useState(1);
 
   const radios = [
-    { name: 'Super resolution', value: '1' },
-    { name: 'Filtering', value: '2' },
-    { name: 'Color conversion', value: '3' },
+    { name: 'Super resolution', value: 1 },
+    { name: 'Image Recovery', value: 2 },
+    { name: '2D SR', value: 3 },
   ];
   /**
    * Radio buttons end
@@ -54,14 +54,29 @@ export default function App() {
   const [name, setName] = useState('Name');
   const [mail, setMail] = useState('Mail');
 
+  const [albums, setAlbums] = React.useState([]);
+  const [albumId, setAlbumId] = React.useState(1)
+
   const [images, setImages] = React.useState([]);
   const [imageIds, setImageIds] = React.useState([]);
   const maxNumber = 69;
   React.useEffect(() => {
-    axios.get(window.location.href + "image/list")
+    axios.get(window.location.href + "api/user")
+      .catch((err) => {
+        if (err.response.status === 401) {
+          window.location.replace("/login");
+        }
+      })
       .then((res) => {
-        if (res.data.list != null) {
-          setImageIds(res.data.list);
+        return axios.get(window.location.href + "api/album/list");
+      })
+      .then((res) => {
+        return axios.get(window.location.href + "api/album/" + res.data.list[0]);
+      })
+      .then((res) => {
+        // res.data = JSON.parse(res.data);
+        if (res.data.imageIds != null) {
+          setImageIds(res.data.imageIds);
         }
       });
   }, []);
@@ -120,10 +135,10 @@ export default function App() {
     });
 
     offcanvas.addEventListener('click', () => {
-        if (current_list == 2) {
+        if (current_list === 2) {
             list2.style.display = "none";
             current_list -= 1;
-        } else if (current_list == 3) {
+        } else if (current_list === 3) {
             list3.style.display = "none";
             current_list -= 1;
         }
@@ -140,7 +155,7 @@ export default function App() {
       frm.append("images", img.file);
     }
     axios
-      .post(window.location.href + "image", frm, {
+      .post(window.location.href + "api/image/new/0/" + radioValue, frm, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -312,8 +327,8 @@ export default function App() {
 
                       {imageIds.map((imageId, index) => (
                         <div key={index + "-grid"} className="image" style={{ float: 'left', width: '100%' }}>
-                          <a href={window.location.href + "image/" + imageId} target="_blank" rel="noreferrer">
-                            <img src={window.location.href + "image/" + imageId} alt="" width="500" />
+                          <a href={window.location.href + "api/image/" + imageId} target="_blank" rel="noreferrer">
+                            <img src={window.location.href + "api/image/" + imageId} alt="" width="500" />
                           </a>
                         </div>
                       ))}
