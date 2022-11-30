@@ -98,7 +98,6 @@ export default function App() {
       var name = document.f.name.value;
       var mail = document.f.mail.value;
 
-
       setMail(mail);
       setName(name);
     });
@@ -475,7 +474,6 @@ export default function App() {
       list3.style.display = "none";
       current_list -= 1;
     }
-
 
   }
 }
