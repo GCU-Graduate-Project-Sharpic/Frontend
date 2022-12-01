@@ -9,6 +9,20 @@ class Register extends Component {
     email: ''
   }
 
+  componentDidMount() {
+    axios.get("https://" + window.location.hostname + "/api/user")
+      .then((res) => {
+        if (res.status === 200) {
+          window.location.replace("/");
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          console.log("Not logged in")        
+        }
+      })
+  }
+
   appChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
@@ -25,7 +39,7 @@ class Register extends Component {
   confirm = (e) => {
     axios
       .post( // Login request
-        window.location.href,
+        "https://" + window.location.hostname + "/api/signup",
         {
           username: this.state.username,
           password: this.state.password,

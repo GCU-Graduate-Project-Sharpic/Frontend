@@ -7,6 +7,21 @@ class Login extends Component {
     username: '',
     password: ''
   }
+  
+  componentDidMount() {
+    axios.get("https://" + window.location.hostname + "/api/user")
+      .then((res) => {
+        if (res.status === 200) {
+          window.location.replace("/");
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          console.log("Not logged in")        
+        }
+      })
+  }
+
 
   appChange = (e) => {
     this.setState({
@@ -16,7 +31,7 @@ class Login extends Component {
   appClick = () => {
     axios
       .post( // Login request
-        window.location.href,
+        "https://" + window.location.hostname + "/api/login",
         {
           username: this.state.username,
           password: this.state.password,
@@ -26,7 +41,7 @@ class Login extends Component {
       )
       .then((res) => {
         if (res.data.status === 'login success') {
-          window.location.pathname = "/";
+          window.location.replace("/")
         } else {
           console.log('wrong data');
         }
