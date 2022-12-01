@@ -32,11 +32,11 @@ export default function App() {
 
 
   const radios = [
-    { name: 'Default', value: '0' },
-    { name: 'SR', value: '1' },
-    { name: 'Restoration - wo scratches', value: '2' },
-    { name: 'Restoration - w scratches', value: '3' },
-    { name: 'VSR', value: '4' }
+    { name: 'Default', value: '-1' },
+    { name: 'SR', value: '0' },
+    { name: 'Restoration - wo scratches', value: '1' },
+    { name: 'Restoration - w scratches', value: '2' },
+    { name: 'VSR', value: '3' }
   ]
   /**
    * Radio buttons end
@@ -133,17 +133,28 @@ export default function App() {
           "Content-Type": "multipart/form-data",
         },
       })
+      .catch((err) => {
+        console.log(err);
+        window.alert("Fail to upload image");
+      })
       .then((res) => {
         if (res.status === "files uploaded!") {
           window.alert("Image uploaded")
+          return axios.get(window.location.href + "api/album/list");
         } else {
           console.log(res.status)
         }
       })
-      .catch((err) => {
-        console.log(err);
-        window.alert("Fail to upload image");
+      .then((res) => {
+        return axios.get(window.location.href + "api/album/" + res.data.list[0]);
+      })
+      .then((res) => {
+        // res.data = JSON.parse(res.data);
+        if (res.data.imageIds != null) {
+          setImageIds(res.data.imageIds);
+        }
       });
+      
   };
 
   return (
@@ -306,7 +317,7 @@ export default function App() {
 
                   <Container fluid>
 
-                    <ButtonGroup className="mb-2" style={{ zIndex:"1" }}>
+                    <ButtonGroup className="mb-2" style={{ zIndex: "1" }}>
                       {radios.map((radio, idx) => (
                         <ToggleButton
                           key={idx}
@@ -325,13 +336,13 @@ export default function App() {
 
                     <Row style={{ width: '100%' }}>
 
-                      {imageIds.map((imageId, index) => (
+                      {/* {imageIds.map((imageId, index) => (
                         <div key={index + "-grid"} className="image" style={{ float: 'left', width: '100%' }}>
                           <a href={window.location.href + "api/image/" + imageId} target="_blank" rel="noreferrer">
                             <img src={window.location.href + "api/image/" + imageId} alt="" width="500" />
                           </a>
                         </div>
-                      ))}
+                      ))} */}
 
                       <div>
                         <ImageUploading
@@ -364,13 +375,18 @@ export default function App() {
                               &nbsp;
                               <Button variant='danger' size='sm' onClick={onImageRemoveAll} >Remove all images</Button>
                               <div>
-                                {imageList.map((image, index) => (
+                                {/* {imageList.map((image, index) => (
                                   <div key={index} style={{ marginTop: '10px', float: "left", margin: "20px", marginRight: "25px" }}>
-                                    <img src={image.data_url} alt="" width="300" height="200" onClick={() => openModal(image.data_url)} />
+                                    <img src={image.data_url} alt="" width="300" height="200" onClick={() => openModal(image.data_url, 'processing.png')} />
                                     <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
                                   </div>
-                                ))
-                                }
+                                ))} */}
+                                {imageIds.map((imageId, index) => (
+                                  <div key={index} style={{ marginTop: '10px', float: "left", margin: "20px", marginRight: "25px" }}>
+                                    <img src={window.location.href + "api/image/" + imageId} alt="" width="300" height="200" onClick={() => openModal(window.location.href + "api/image/" + imageId, window.location.href + "api/image/processed/" + imageId)} />
+                                    <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
+                                  </div>
+                                ))}
                               </div>
                             </Stack>
                           )}
@@ -404,7 +420,7 @@ export default function App() {
     </div>
   );
 
-  function openModal(_src) {
+  function openModal(_src, _src2) {
     const modal2 = document.querySelector('.modal2');
     const body = document.querySelector('body');
 
@@ -418,17 +434,20 @@ export default function App() {
 
     ReactDOM.createRoot(document.querySelector('.modal2')).render(
 
-      <Stack style={{width:"100%", height:"100%", alignItems:"center", textAlign:"center"}}>
+      <Stack style={{ width: "100%", height: "100%", alignItems: "center", textAlign: "center", margin: "50px" }}>
 
         <Row >
-          <img src={_src} alt="" style={{width:"600px", height:"600px", margin:"50px", marginBottom:"80px"}} />
+          <ReactCompareSlider style={{width:"50vw", marginBottom:"80px", alignItems:"center", textAlign:"center"}}
+            itemOne={<ReactCompareSliderImage src={_src} alt="Image one" />}
+            itemTwo={<ReactCompareSliderImage src={_src2} alt="Image two" />}
+          />
         </Row>
 
         <Row>
           <Button variant='danger' onClick={openModal}>Close</Button>
         </Row>
 
-          {/*
+        {/*
           <ReactCompareSlider>
             itemOne = {<ReactCompareSliderImage src={_src} alt='img1' />}
             itemTwo = {<ReactCompareSliderImage src={_src} alt='img2' />}
