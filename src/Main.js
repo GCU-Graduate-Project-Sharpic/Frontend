@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Container from 'react-bootstrap/Container';
 
 import TopBar from './sub_module/main/TopBar';
 import OffCanvas from './sub_module/main/OffCanvas';
 
-import Row from 'react-bootstrap/Row';
 import Stack from 'react-bootstrap/Stack';
-import ProfileModal from './sub_module/modal/ProfileModal';
 
+import ProfileModal from './sub_module/modal/ProfileModal';
 import ImageListBody from './sub_module/main/ImageListBody';
 import AlbumNavigation from './sub_module/main/AlbumNavigation';
 import ImageModal from './sub_module/modal/ImageModal';
+import SideBar from './sub_module/main/SideBar';
 
 export default function App() {
 
@@ -87,6 +86,7 @@ export default function App() {
       });
   }, []);
 
+  const inOffCanvas = false;
 
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
@@ -127,40 +127,47 @@ export default function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App" style={{ width: '100%' }}>
       {/* header */}
-      <div className="bg-light border" style={{ flex: 'center' }}>
+      <div className="bg-light border" style={{ flex: 'center', width: '100%' }}>
         {/** Header */}
         <TopBar handleShow={handleShow} profileConfigurationHandler={profileConfigurationHandler} />
       </div>
 
-      <Stack direction="horizontal" gap={2} style={{ height: "100%", width: "100%" }}> {/** user profile */}
+      <ProfileModal modalProfile={modalProfile} />
+      {/** Add some margin */}
 
-        <ProfileModal modalProfile={modalProfile} />
-        {/** Add some margin */}
-
-        <OffCanvas
-          handleClose={handleClose}
-          addAlbum={addAlbum}
-          show={show}
-          name={name}
-          mail={mail}
-        />
+      <OffCanvas
+        handleClose={handleClose}
+        addAlbum={addAlbum}
+        show={show}
+        name={name}
+        mail={mail}
+      />
 
 
-        <div style={{ width: '2000px', height: '850px' }}> {/** Main body */}
+      <Stack direction="vertical" gap={1} style={{ height: "100%", maxWidth: "100%" }}> {/** user profile */}
+
+        <div> {/** Main body */}
 
           {/** Add nav bar */}
           <AlbumNavigation album_name={album_name} handleShow={handleShow} />
 
-          <Container fluid>
+          <div direction="horizontal">
 
-           
+            <div style={{ height: '100%', width: '20%' }}>
+              <SideBar
+                inOffCanvas={inOffCanvas}
+                handleClose={handleClose}
+                addAlbum={addAlbum}
+                show={show}
+                name={name}
+                mail={mail}
+              />
+            </div>
 
-            <Row style={{ width: '100%' }}>
+            <div style={{ width: '79%', float: 'right' }}>
 
-              {/* 여기에 ImageIds.map ...  */}
-              {/* 여기에 ImageUploading */}
               <ImageListBody
                 imageIds={imageIds}
                 images={images}
@@ -169,17 +176,18 @@ export default function App() {
                 openModal={openModal}
               />
 
+            </div>
 
-            </Row>
+          </div>
 
-          </Container>
         </div>
 
       </Stack> {/** End of horizontal stack */}
       {/* 슬라이더 팝업 */}
-      <style dangerouslySetInnerHTML={{ __html: "\n.modal2 {\nposition: absolute;\n z-index:5; top: 0;\n\n\nwidth: 100%;\nheight: 100%;\n\ndisplay: none;\n        background-color: rgba(0, 0, 0, 0.9);\n      }\n\n      .modal2.show {\n      display: block;\n      }\n\n      .modal2_body {\n        position: absolute;\n      \n  top: 50%;\n        left: 50%;\n\n        width: 1100px;\n        height: 800px;\n\n        padding: 40px;\n\n        text-align: center;\n\n        background-color: rgb(192, 192, 192);\n        border-radius: 10px;\n        box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);\n\n        transform: translateX(-50%) translateY(-50%);\n      }\n    " }} />
-      <div className="modal2">
-        <ImageModal imgSlider={imgSlider} _src={_src} _src2={_src2} setimgSlider={setimgSlider} openModal={openModal} isProcessed={isProcessed}/>
+
+      <style dangerouslySetInnerHTML={{ __html: "\n.modal2 {\nposition: absolute;\n z-index:5; top: 0;\n\n\nwidth: 100%; height: 100%;\n\ndisplay: none;\n       \n      }\n\n      .modal2.show {\n      display: block;\n      }\n\n      .modal2_body {\n        position: absolute;\n      \n  top: 50%;\n        left: 50%;\n\n        width: 1100px;\n        height: 100%;\n\n        padding: 40px;\n\n        text-align: center;\n\n        background-color: rgb(192, 192, 192);\n        border-radius: 10px;\n        box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);\n\n        transform: translateX(-50%) translateY(-50%);\n      }\n    " }} />
+      <div className="modal2" style={{ height: '100%' }}>
+        <ImageModal imgSlider={imgSlider} _src={_src} _src2={_src2} setimgSlider={setimgSlider} openModal={openModal} isProcessed={isProcessed} />
       </div>
     </div>
   );
@@ -189,11 +197,17 @@ export default function App() {
   }
 
   function openModal(_src, _src2) {
+
+    // disable scroll when modal is open
+    const body = document.querySelector('body');
+    body.style.overflow = 'hidden';
+
     console.log("Button click");
     const modal2 = document.querySelector('.modal2');
 
     if (modal2.classList.contains('show')) {
       modal2.classList.remove('show');
+      body.style.overflow = 'auto';
     } else {
       modal2.classList.add('show');
     }
