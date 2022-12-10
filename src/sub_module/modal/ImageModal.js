@@ -20,6 +20,23 @@ function ImageModal(props) {
     { name: 'VSR', value: '3' }
   ]
   const [radioValue, setRadioValue] = useState('0');
+  const [imgSlider, setimgSlider] = useState(true);
+  const [_src, setSrc] = useState();
+  const [_src2, setSrc2] = useState();
+
+  if (props.image.info.status) {
+    setimgSlider(true)
+    setSrc(window.location.href + "api/image/" + props.image.id);
+    setSrc2(window.location.href + "api/image/processed/" + props.image.id);
+  } else if(props.image.info.up !== -1) {
+    setimgSlider(true)
+    setSrc(window.location.href + "api/image/" + props.image.id);
+    setSrc2('processing.png');
+  } else {
+    setimgSlider(false)
+    setSrc(window.location.href + "api/image/" + props.image.id);
+    setSrc2('processing.png');
+  }
 
   return (
 
@@ -79,8 +96,8 @@ function ImageModal(props) {
               <ButtonGroup>
                 <Button variant='danger' onClick={props.isProcessed} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Processing</Button>
                 <DropdownButton title="Download" variant="success">
-                  <Dropdown.Item href={props._src.toString().trim()} download>Original</Dropdown.Item>
-                  <Dropdown.Item href={props._src.toString().trim()} download>Processed</Dropdown.Item>
+                  <Dropdown.Item href={props._src.trim()} download>Original</Dropdown.Item>
+                  <Dropdown.Item href={props._src2.trim()} download>Processed</Dropdown.Item>
                 </DropdownButton>
                 <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>Close</Button>
               </ButtonGroup>

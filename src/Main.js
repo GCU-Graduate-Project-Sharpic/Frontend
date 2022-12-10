@@ -15,9 +15,6 @@ import SideBar from './sub_module/main/SideBar';
 export default function App() {
 
   const [show, setShow] = useState(false);
-  const [imgSlider, setimgSlider] = useState(true);
-  const [_src, setSrc] = useState();
-  const [_src2, setSrc2] = useState();
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -55,14 +52,32 @@ export default function App() {
     }
   }
 
+  const getImageInfos = async (imageIds) => {
+    let imageList = [];
+    for (let imageId of imageIds) {
+      await axios.get(window.location.href + "api/image/info/" + imageId)
+        .then((res) => {
+          imageList.push({
+            id: imageId,
+            info: res.data
+          })
+        })
+      console.log("Inner for")
+    }
+    console.log("outer for")
+    setImageIds(imageList);
+  }
+
   const [name, setName] = useState('Name');
   const [mail, setMail] = useState('Mail');
   const [album_name, setAlbumName] = useState('Album Name');
 
-  const [albums, setAlbums] = React.useState([]);
-  const [albumId, setAlbumId] = React.useState(1)
+  const [albumId, setAlbumId] = useState(0);
+  const [albumIds, setAlbumIds] = React.useState([])
 
-  const [images, setImages] = React.useState([]);
+  const [albums, setAlbums] = React.useState([]);
+
+  const [modalImage, setModalImage] = React.useState();
   const [imageIds, setImageIds] = React.useState([]);
   const maxNumber = 69;
   React.useEffect(() => {
@@ -76,12 +91,17 @@ export default function App() {
         return axios.get(window.location.href + "api/album/list");
       })
       .then((res) => {
-        return axios.get(window.location.href + "api/album/" + res.data.list[0]);
+        setAlbumIds(res.data.list);
+        if (albumId === 0) {
+          setAlbumId(res.data.list[0])
+          return axios.get(window.location.href + "api/album/" + res.data.list[0]);
+        }
+        return axios.get(window.location.href + "api/album/" + albumId);
       })
       .then((res) => {
         // res.data = JSON.parse(res.data);
         if (res.data.imageIds != null) {
-          setImageIds(res.data.imageIds);
+          getImageInfos(res.data.imageIds);
         }
       });
   }, []);
@@ -90,14 +110,18 @@ export default function App() {
 
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-    var ori_img_length = images.length;
-    setImages(imageList);
     const frm = new FormData();
-    for (var img of imageList.slice(ori_img_length)) {
+    for (var img of imageList) {
       frm.append("images", img.file);
     }
+    let url = window.location.href + "api/image/new/";
+    if (albumId === albumIds[0]) {
+      url = url + "0";
+    } else {
+      url = url + albumId;
+    }
     axios
-      .post(window.location.href + "api/image/new/0/", frm, {
+      .post(url, frm, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -109,18 +133,15 @@ export default function App() {
       .then((res) => {
         if (res.status === "files uploaded!") {
           window.alert("Image uploaded")
-          return axios.get(window.location.href + "api/album/list");
+          return axios.get(window.location.href + "api/album/" + albumId);
         } else {
           console.log(res.status)
         }
       })
       .then((res) => {
-        return axios.get(window.location.href + "api/album/" + res.data.list[0]);
-      })
-      .then((res) => {
         // res.data = JSON.parse(res.data);
         if (res.data.imageIds != null) {
-          setImageIds(res.data.imageIds);
+          getImageInfos(res.data.imageIds);
         }
       });
 
@@ -170,7 +191,6 @@ export default function App() {
 
               <ImageListBody
                 imageIds={imageIds}
-                images={images}
                 maxNumber={maxNumber}
                 onChange={onChange}
                 openModal={openModal}
@@ -187,16 +207,22 @@ export default function App() {
 
       <style dangerouslySetInnerHTML={{ __html: "\n.modal2 {\nposition: absolute;\n z-index:5; top: 0;\n\n\nwidth: 100%; height: 100%;\n\ndisplay: none;\n       \n      }\n\n      .modal2.show {\n      display: block;\n      }\n\n      .modal2_body {\n        position: absolute;\n      \n  top: 50%;\n        left: 50%;\n\n        width: 1100px;\n        height: 100%;\n\n        padding: 40px;\n\n        text-align: center;\n\n        background-color: rgb(192, 192, 192);\n        border-radius: 10px;\n        box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);\n\n        transform: translateX(-50%) translateY(-50%);\n      }\n    " }} />
       <div className="modal2" style={{ height: '100%' }}>
-        <ImageModal imgSlider={imgSlider} _src={_src} _src2={_src2} setimgSlider={setimgSlider} openModal={openModal} isProcessed={isProcessed} />
+        {
+          modalImage ? (
+            <ImageModal image={modalImage} openModal={openModal} isProcessed={isProcessed} />
+          ) : (
+            <div>
+            </div>
+          )
+        }
       </div>
     </div>
   );
 
   function isProcessed() {
-    setimgSlider(!imgSlider);
   }
 
-  function openModal(_src, _src2) {
+  function openModal(image) {
 
     // disable scroll when modal is open
     const body = document.querySelector('body');
@@ -212,8 +238,7 @@ export default function App() {
       modal2.classList.add('show');
     }
 
-    setSrc(_src);
-    setSrc2(_src2);
+    setModalImage(image);
   }
 
   function modalProfile(change) {
