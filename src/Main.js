@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 import TopBar from './sub_module/main/TopBar';
 import OffCanvas from './sub_module/main/OffCanvas';
 
 import Stack from 'react-bootstrap/Stack';
-
+import "./Main.css";
 import ProfileModal from './sub_module/modal/ProfileModal';
 import ImageListBody from './sub_module/main/ImageListBody';
 import AlbumNavigation from './sub_module/main/AlbumNavigation';
@@ -35,11 +35,8 @@ export default function App() {
 
     if (change === true) {
 
-      name = document.f.name.value;
-      mail = document.f.mail.value;
-
-      setMail(mail);
-      setName(name);
+      setMail(document.f.mail.value);
+      setName(document.f.name.value);
       /** 
       axios.get(window.location.href + "api/user")
         .catch((err) => {
@@ -127,9 +124,9 @@ export default function App() {
   };
 
   return (
-    <div className="App" style={{ width: '100%' }}>
+    <div className="App">
       {/* header */}
-      <div className="bg-light border" style={{ flex: 'center', width: '100%' }}>
+      <div className="bg-lightBorder" >
         {/** Header */}
         <TopBar handleShow={handleShow} profileConfigurationHandler={profileConfigurationHandler} />
       </div>
@@ -155,7 +152,7 @@ export default function App() {
 
           <div direction="horizontal">
 
-            <div style={{ height: '100%', width: '20%' }}>
+            <div className="SideBar">
               <SideBar
                 inOffCanvas={inOffCanvas}
                 handleClose={handleClose}
@@ -166,8 +163,10 @@ export default function App() {
               />
             </div>
 
-            <div style={{ width: '79%', float: 'right' }}>
 
+            {/* Align each items into center */}
+
+            <div className="d-lg-none" >
               <ImageListBody
                 imageIds={imageIds}
                 images={images}
@@ -175,7 +174,16 @@ export default function App() {
                 onChange={onChange}
                 openModal={openModal}
               />
+            </div>
 
+            <div className="d-none d-lg-block" style={{ width: '79%', float: 'right' }}>
+              <ImageListBody
+                imageIds={imageIds}
+                images={images}
+                maxNumber={maxNumber}
+                onChange={onChange}
+                openModal={openModal}
+              />
             </div>
 
           </div>
@@ -185,8 +193,7 @@ export default function App() {
       </Stack> {/** End of horizontal stack */}
       {/* 슬라이더 팝업 */}
 
-      <style dangerouslySetInnerHTML={{ __html: "\n.modal2 {\nposition: absolute;\n z-index:5; top: 0;\n\n\nwidth: 100%; height: 100%;\n\ndisplay: none;\n       \n      }\n\n      .modal2.show {\n      display: block;\n      }\n\n      .modal2_body {\n        position: absolute;\n      \n  top: 50%;\n        left: 50%;\n\n        width: 1100px;\n        height: 100%;\n\n        padding: 40px;\n\n        text-align: center;\n\n        background-color: rgb(192, 192, 192);\n        border-radius: 10px;\n        box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);\n\n        transform: translateX(-50%) translateY(-50%);\n      }\n    " }} />
-      <div className="modal2" style={{ height: '100%' }}>
+      <div className="modal2">
         <ImageModal imgSlider={imgSlider} _src={_src} _src2={_src2} setimgSlider={setimgSlider} openModal={openModal} isProcessed={isProcessed} />
       </div>
     </div>

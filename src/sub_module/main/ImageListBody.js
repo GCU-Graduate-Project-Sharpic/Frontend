@@ -1,7 +1,7 @@
 import ImageUploading from "react-images-uploading";
 import Stack from 'react-bootstrap/Stack';
 import Button from 'react-bootstrap/Button';
-
+import "./ImageListBody.css";
 
 function ImageListBody(props) {
 
@@ -9,7 +9,7 @@ function ImageListBody(props) {
 
         <div style={{ width: '100%' }} >
             {props.imageIds.map((imageId, index) => (
-                <div key={index + "-grid"} className="image" style={{ float: 'left', width: '70%' }}>
+                <div key={index + "-grid"} className="image" >
                     <a href={window.location.href + "api/image/" + imageId} target="_blank" rel="noreferrer">
                         <img src={window.location.href + "api/image/" + imageId} alt="" width="500" />
                     </a>
@@ -35,22 +35,12 @@ function ImageListBody(props) {
                     // write your building UI
                     // <div className="upload__image-wrapper">
 
-                    <Stack style={{ marginTop: '10px', width: '80vw', height: '50vw', position: "relative", float: "left" }}>
+                    <Stack className="ImageList">
 
-                        {/* Align button into center */}
-                        {/*}
-                        <div style={{ width: '100%', height: '100%', position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                        <Button
-                            style={{ width: '200px', marginTop: '5px', marginLeft: '45px' }}
-                            variant='primary'
-                            size='sm'
-                            onClick={onImageUpload} {...dragProps}>
-                            Click or Drop here
-                        </Button>
-                </div> */}
+                      
 
                         <Button
-                            style={{ width: '200px', marginTop: '5px', marginLeft: '45px' }}
+                        
                             variant='primary'
                             size='sm'
                             onClick={onImageUpload} {...dragProps}>
@@ -61,23 +51,17 @@ function ImageListBody(props) {
 
                         <div >
                             {imageList.map((image, index) => (
-                                <div key={index} style={{ float: "left", margin: "20px" }}>
+                                <div className="ListBody" key={index} >
                                     <img src={image.data_url} alt="" width="300" height="200" onClick={() => props.openModal(image.data_url, 'processing.png')} />
-                                    <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
+                                    <img className="delete" src='delete.png'  alt='close' z-index='3' onClick={() => onImageRemove(index)} />
                                 </div>
                             ))}
                             {props.imageIds.map((imageId, index) => (
-                                <div key={index} style={{ float: "left", margin: "20px" }}>
+                                <div className="ListBody" key={index} >
                                     <img src={window.location.href + "api/image/" + imageId} alt="" width="300" height="200" onClick={() => props.openModal(window.location.href + "api/image/" + imageId, window.location.href + "api/image/processed/" + imageId)} />
-                                    <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
+                                    <img className="delete" src='delete.png'  alt='close' z-index='3' onClick={() => onImageRemove(index)} />
                                 </div>
                             ))}
-                            {/* {imageIds.map((imageId, index) => (
-                                  <div key={index} style={{ marginTop: '10px', float: "left", margin: "20px", marginRight: "25px" }}>                                    
-                                    <img src={window.location.href + "api/image/" + imageId} alt="" width="300" height="200" onClick={() => <ImageModal _src=(window.location.href + "api/image/" + imageId) _src2=(window.location.href + "api/image/processed/" + imageId)></ImageModal>/>
-                                    <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
-                                  </div>
-                                ))} */}
                         </div>
                     </Stack>
                 )}

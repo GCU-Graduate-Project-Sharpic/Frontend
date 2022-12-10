@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import "./ImageModal.css";
 import Stack from 'react-bootstrap/Stack';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
@@ -19,22 +19,28 @@ function ImageModal(props) {
     { name: 'Restoration - w scratches', value: '2' },
     { name: 'VSR', value: '3' }
   ]
-  const [radioValue, setRadioValue] = useState('0');
+  const [radioValue, setRadioValue] = useState('-1');
 
   return (
 
-    <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: "1000", backgroundColor: "white", width: "90vw", height: "90vh", border: "1px solid black",alignItems: "center" , borderRadius: "10px", overflow: "auto" }}>
+    <div className="ImageModal">
       {
         props.imgSlider ? (
           // true
-          <Stack style={{ width: "100%", height: '100%', alignItems: "center" }}>
+          <Stack
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+          >
+            <Row>
+              {/* width = props._src.width / 2 */}
 
-            <Row >
-              <img src={props._src} style={{ width: "50vw", height: "28vw", margin: "50px", maxWidth: "80%", minWidth: "80%" }} />
+              <img id='defaultImage' src={props._src} />
             </Row>
 
             <Row>
-              <ButtonGroup className="mb-2" style={{ zIndex: "1" }}>
+              <ButtonGroup className="mb-2" style={{ zIndex: "1", display: 'none' }}>
                 {radios.map((radio, idx) => (
                   <ToggleButton
                     key={idx}
@@ -50,11 +56,21 @@ function ImageModal(props) {
                   </ToggleButton>
                 ))}
               </ButtonGroup>
-            </Row>
-            <Row>
-              <ButtonGroup>
-                <Button variant='danger' onClick={props.isProcessed} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Processing</Button>
-                <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>Close</Button>
+
+              <DropdownButton id='dropDown' title="Select Image" >
+                {/* select upper radio */}
+                <Dropdown.Item onClick={() => setRadioValue('-1')}>Default</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('0')}>SR</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('1')}>Restoration - wo scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('2')}>Restoration - w scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('3')}>VSR</Dropdown.Item>
+
+              </DropdownButton>
+
+
+              <ButtonGroup className="defaultButton">
+                <Button variant='danger' onClick={props.isProcessed} style={{ backgroundColor: "blue", borderBlockColor: "blue"}}>Processing</Button>
+                <Button variant='danger' onClick={props.openModal}>Close</Button>
               </ButtonGroup>
             </Row>
 
@@ -62,27 +78,35 @@ function ImageModal(props) {
           </Stack>
         ) : (
           // false
-          <Stack style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <Stack
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+          >
 
             <Row>
 
-              <ReactCompareSlider style={{ width: "50vw", height: "28vw", margin: "50px", maxWidth:"80%", minWidth: "80%"}}
-                itemOne={<ReactCompareSliderImage src={props._src} alt="Image one" />}
+              {/* if image's width > height, then maxWidth = minWidth = 80%
+                  else, maxWidth = minWidth = 30%
+              */}
+
+              <ReactCompareSlider className="processingImage" 
+                itemOne={<ReactCompareSliderImage src={props._src} style={{}} alt="Image one" />}
                 itemTwo={<ReactCompareSliderImage src={props._src} style={{ filter: 'grayscale(1)' }} alt="Image two" />}
               />
             </Row>
 
             <Row>
-
+              <DropdownButton title="Download" variant="success" style={{ marginBottom: '10px' }}>
+                <Dropdown.Item href={props._src.toString().trim()} download>Original</Dropdown.Item>
+                <Dropdown.Item href={props._src.toString().trim()} download>Processed</Dropdown.Item>
+              </DropdownButton>
             </Row>
             <Row>
               <ButtonGroup>
-                <Button variant='danger' onClick={props.isProcessed} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Processing</Button>
-                <DropdownButton title="Download" variant="success">
-                  <Dropdown.Item href={props._src.toString().trim()} download>Original</Dropdown.Item>
-                  <Dropdown.Item href={props._src.toString().trim()} download>Processed</Dropdown.Item>
-                </DropdownButton>
-                <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>Close</Button>
+                <Button variant='danger' onClick={props.isProcessed} style={{ backgroundColor: "blue", borderBlockColor: "blue", border: "0"}}>Processing</Button>
+                <Button variant='danger' onClick={props.openModal} style={{ border: "0"}}>Close</Button>
               </ButtonGroup>
             </Row>
 
