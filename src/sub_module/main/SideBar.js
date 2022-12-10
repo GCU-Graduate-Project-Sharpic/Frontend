@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import ListGroup from 'react-bootstrap/ListGroup';
+import "./SideBar.css";
 
 function SideBar(props) {
 
@@ -10,10 +11,10 @@ function SideBar(props) {
 
     return (
 
-        <Card 
+        <Card id='sidebar'
          className={hide_opt}
          // fit height of screen 
-            style={{marginTop: '8px', marginLeft: '8px', marginBottom: '8px',  height: '100%', width: '100%', float: 'left', overflow: 'auto' }}
+            
          >
             <Card.Body>
 

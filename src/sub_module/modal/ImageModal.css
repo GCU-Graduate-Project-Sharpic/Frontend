@@ -1,0 +1,77 @@
+.ImageModal {
+    position: fixed;
+    top: 50%;
+    left:50%;
+    width: 95%;
+    height: 90%;
+    background-color: white;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    border: 1px solid black;
+    align-items: center;
+    border-radius: 10px;
+    overflow: auto;
+}
+
+
+#defaultImage {
+    margin: 50px;
+    max-width: 60%;
+    min-width: 10%;
+}
+
+.dropDown {
+    z-index: 1;
+    margin-bottom: 10px;
+}
+.defaultButton{
+    width: 100px;
+    border: 0;
+}
+.processingImage{
+ 
+    margin: 50px;
+    max-width: 80%;
+    min-width: 80%;
+}
+
+@media (max-width:550px) {
+
+    .ImageModal {
+        position: fixed;
+        top: 50%;
+        left:50%;
+        background-color: white;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        border: 1px solid black;
+        align-items: center;
+        border-radius: 10px;
+        overflow: auto;
+    }
+    
+    
+    #defaultImage {
+        margin: 50px;
+        max-width: 60%;
+        min-width: 10%;
+    }
+
+    
+    .dropDown {
+        z-index: 1;
+        margin-bottom: 10px;
+    }
+    .defaultButton{
+       
+        border: 0;
+    }
+    .processingImage{
+        margin: 50px;
+        max-width: 80%;
+        min-width: 80%;
+    }
+    
+
+
+}
