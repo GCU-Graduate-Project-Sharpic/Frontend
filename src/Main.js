@@ -14,7 +14,6 @@ import SideBar from './sub_module/main/SideBar';
 
 export default function App() {
   const [appShow, setAppShow] = useState(false);
-  const [small, setSmall] = useState(false);
 
   const [profileShow, setProfileShow] = useState(false);
   const [offcanvasShow, setOffcanvasShow] = useState(false);
@@ -23,36 +22,6 @@ export default function App() {
   const [email, setEmail] = useState('Email');
 
   const handleOffcanvasShow = () => setOffcanvasShow(!offcanvasShow);
-  // const profileConfigurationHandler = (change) => {
-  //   const modal = document.querySelector('.modal');
-  //   const body = document.querySelector('body');
-
-  //   if (modal.classList.contains('show')) {
-  //     modal.classList.remove('show');
-  //     body.style.overflow = 'auto';
-  //   } else {
-  //     modal.classList.add('show');
-  //     body.style.overflow = 'hidden';
-  //   }
-
-  //   if (change === true) {
-
-  //     setMail(document.f.mail.value);
-  //     setName(document.f.name.value);
-  //     /** 
-  //     axios.get(window.location.origin + "/api/user")
-  //       .catch((err) => {
-  //         if (err.response.status === 401) {
-  //           window.location.replace("/login");
-  //         }
-  //       })
-  //       .then((res) => {
-  //         setName(res.data.name);
-  //         setMail(res.data.mail);
-  //       });
-  //       */
-  //   }
-  // }
 
   const getImageInfos = async (imageIds) => {
     let imageList = [];
@@ -148,7 +117,7 @@ export default function App() {
   };
 
   return (
-    // appShow &&
+    appShow &&
     <div className="App">
       {/* header */}
       <div className="bg-lightBorder" >

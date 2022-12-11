@@ -29,10 +29,9 @@ function Register(props) {
           console.log("Not logged in")
         }
       })
-  })
+  }, [])
 
   const confirm = (e) => {
-    console.log(`username는 : ${username}\npw는 : ${password}\nemail은 : ${email}`);
     axios
       .post( // Login request
         window.location.origin + "/api/signup",
@@ -53,12 +52,20 @@ function Register(props) {
       })
       .catch((err) => alert(err));
   }
+
+  const enterKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      confirm();
+    }
+  }
+
   const login = (e) => {
     window.location.replace("/login")
   }
+
   return (
     <div className="Auth-form-container">
-      <form className="Auth-form">
+      <div className="Auth-form">
         <div className="Auth-form-content">
           <h3 className="Auth-form-title">Sign Up</h3>
           <div className="text-center">
@@ -92,15 +99,16 @@ function Register(props) {
               className="form-control mt-1"
               placeholder="Password"
               onChange={passwordChange}
+              onKeyDown={enterKeyPress}
             />
           </div>
           <div className="d-grid gap-2 mt-3">
-            <button onClick={confirm} type="submit" className="btn btn-primary">
-              Submit
+            <button onClick={confirm} className="btn btn-primary">
+              Signup
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ function AlbumNavigation(props) {
     return (
         <Navbar bg='light'>
             <Container>
-                <Navbar.Brand href="#home">{props.albumTitle}</Navbar.Brand>
+                <Navbar.Brand>{props.albumTitle}</Navbar.Brand>
                 <Navbar.Toggle />
                 <Navbar.Collapse className="justify-content-end">
                     <Navbar.Text>
