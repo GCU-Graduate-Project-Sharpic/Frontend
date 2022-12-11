@@ -22,7 +22,7 @@ function ProfileModal(props) {
         style={{ display: 'block', position: 'initial' }}
       >
         <Modal.Dialog>
-          <Modal.Header closeButton>
+          <Modal.Header>
             <Modal.Title>User Preferences</Modal.Title>
           </Modal.Header>
 

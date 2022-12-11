@@ -55,12 +55,10 @@ function ImageListBody(props) {
                 (
                   <div key={index} style={{ float: "left", margin: "20px" }}>
                     <img src={window.location.origin + "/api/image/processed/" + image.id} alt="" width="300" height="200" onClick={() => props.openModal(image)} />
-                    <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
                   </div>
                 ) : (
                   <div key={index} style={{ float: "left", margin: "20px" }}>
                     <img src={window.location.origin + "/api/image/" + image.id} alt="" width="300" height="200" onClick={() => props.openModal(image)} />
-                    <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
                   </div>
                 )
               )}
