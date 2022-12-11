@@ -1,5 +1,8 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+
 import "./ImageModal.css";
 function ProfileModal(props) {
   const [name, setName] = React.useState('');
@@ -12,23 +15,53 @@ function ProfileModal(props) {
     setEmail(e.target.value);
   }
   return (
-      <div className="modal_body" >
-        <h1 >개인정보</h1>
 
-        <form name="f">
-          <p>Name : &nbsp;&nbsp; <input id="form_name" type="text" name="name" onChange={nameChange} placeholder="hong gil dong" /></p>
-          <p>Mail :&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<input type="text" name="mail" onChange={emailChange} placeholder="hong@gmail.com" /></p>
-          <p>age :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="age" placeholder="20" /></p>
-          <p>gender :&nbsp; <input type="text" name="gender" placeholder="M" /></p>
+    <div>
+      <div
+        className="modal show"
+        style={{ display: 'block', position: 'initial' }}
+      >
+        <Modal.Dialog>
+          <Modal.Header closeButton>
+            <Modal.Title>User Preferences</Modal.Title>
+          </Modal.Header>
 
+          <Modal.Body>
 
-          <br></br><br></br><br></br><br></br>
-          <Button variant="primary" className="updateAccount" style={{ marginRight: '10px' }} onClick={() => props.modalProfile(true, name, email)}>변경</Button>
-          <Button variant="danger" className="updateAccount" onClick={() => props.modalProfile(false, name, email)}>취소</Button>
-        </form>
+            <Form>
+              <Form.Text className="text-muted">
+                Your name and mail will be display on the sidebar.
+              </Form.Text> <br />
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Name</Form.Label>
+                <Form.Control type="email" placeholder="Enter Name" onChange={nameChange} />
+              </Form.Group>
 
-        {/* <p><input type="button" style={{ display: "block", margin: "auto", width: "200px", backgroundColor: "blue", color: "white" }} value="변경" onClick="send_go()" /></p> */}
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Mail</Form.Label>
+                <Form.Control type="email" placeholder="Enter Email" onChange={emailChange} />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Age</Form.Label>
+                <Form.Control type="email" placeholder="Enter Age" />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Gender</Form.Label>
+                <Form.Control type="email" placeholder="Enter Gender" />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="primary" className="updateAccount" style={{ marginRight: '10px' }} onClick={() => props.modalProfile(true, name, email)}>변경</Button>
+            <Button variant="danger" className="updateAccount" onClick={() => props.modalProfile(false, name, email)}>취소</Button>
+          </Modal.Footer>
+        </Modal.Dialog>
       </div>
+
+    </div>
   )
 }
 
