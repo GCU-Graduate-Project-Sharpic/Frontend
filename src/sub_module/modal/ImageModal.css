@@ -1,21 +1,9 @@
-.ImageModal {
-    position: fixed;
-    top: 50%;
-    left:50%;
-    width: 95%;
-    height: 90%;
-    background-color: white;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    border: 1px solid black;
-    align-items: center;
-    border-radius: 10px;
-    overflow: auto;
+#modal_modified {
+    padding: 0rem;
 }
 
-
 #defaultImage {
-    margin: 50px;
+    margin: 10px;
     object-fit: contain;
     /* max-width: 60%;
     min-width: 10%; */
@@ -30,8 +18,6 @@
     border: 0;
 }
 .processingImage{
- 
-    margin: 50px;
     object-fit: contain;
     /* max-width: 80%;
     min-width: 80%; */
@@ -54,7 +40,7 @@
     
     
     #defaultImage {
-        margin: 50px;
+        margin: 0px;
         /* max-width: 60%;
         min-width: 10%; */
     }
@@ -66,14 +52,12 @@
     }
     .defaultButton{
        
-        border: 0;
+        border: 0; 
     }
+
     .processingImage{
-        margin: 50px;
-        /* max-width: 80%;
-        min-width: 80%; */
+        object-fit: contain;
     }
-    
 
 
 }

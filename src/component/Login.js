@@ -1,14 +1,19 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import "./Login.css";
 
-class Login extends Component {
-  state = {
-    username: '',
-    password: ''
+function Login(props) {
+
+  const[username, setName]=useState('');
+  const[password, setPassword]=useState('');
+  const nameChange=(e)=>{
+    setName(e.target.value);
+  }
+  const passwordChange=(e)=>{
+    setPassword(e.target.value);
   }
   
-  componentDidMount() {
+  useEffect(()=>{
     axios.get(window.location.origin + "/api/user")
       .then((res) => {
         if (res.status === 200) {
@@ -17,24 +22,18 @@ class Login extends Component {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          console.log("Not logged in")        
+          console.log("Not logged in")
         }
       })
-  }
-
-
-  appChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  }
-  appClick = () => {
+  });
+  
+  const appClick = () => {
     axios
       .post( // Login request
         window.location.origin + "/api/login",
         {
-          username: this.state.username,
-          password: this.state.password,
+          username: username,
+          password: password,
           email: ' '
         },
         { 'Content-Type': 'application/json', withCredentials: true }
@@ -47,33 +46,57 @@ class Login extends Component {
         }
       })
       .catch((err) => alert(err));
-
+  
   }
-  appKeyPress = (e) => {
+  const appKeyPress = (e) => {
     if (e.key === 'Enter') {
       this.appClick();
     }
   }
-  register = (e) => {
+  const register = (e) => {
     window.location.replace("/signup")
   }
-  render() {
-    const { username, password } = this.state;
-    const { appChange, appClick, appKeyPress, register } = this;
-    return (
-      <div className="container-center-horizontal">
-        <div className="desktop-1 screen">
-          <h1 className="title">
-            Sharpic
-          </h1>
-          <input type="text" name="username" placeholder="Email Address" value={username} onChange={appChange} className="component border-2px-black email-address valign-text-middle roboto-normal-black-15px" />
-          <input type="password" name="password" placeholder="Password" value={password} onChange={appChange} onKeyPress={appKeyPress} className="overlap-group border-2px-black password valign-text-middle roboto-normal-black-15px" />
-          <button onClick={register} className="button place valign-text-middle">REGISTER</button>
-          <button onClick={appClick} className="button-1 log-in valign-text-middle">LOG IN</button>
+
+  return (
+    <div className="Auth-form-container">
+      <form className="Auth-form">
+        <div className="Auth-form-content">
+          <h3 className="Auth-form-title">Sign In</h3>
+          <div className="text-center">
+            Not registered yet?{" "}
+            <span className="link-primary" onClick={register}>
+              Sign Up
+            </span>
+          </div>
+          <div className="form-group mt-3">
+            <label>User Name</label>
+            <input
+              type="text"
+              name="username"
+              className="form-control mt-1"
+              placeholder="Enter user name"
+              onChange={nameChange}
+            />
+          </div>
+          <div className="form-group mt-3">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control mt-1"
+              placeholder="Enter password"
+              onChange={passwordChange}
+              onKeyDown={appKeyPress}
+            />
+          </div>
+          <div className="d-grid gap-2 mt-3">
+            <button onClick={appClick} type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </div>
         </div>
-      </div>
-    );
-  }
+      </form>
+    </div>
+  );
 }
 
 export default Login;
