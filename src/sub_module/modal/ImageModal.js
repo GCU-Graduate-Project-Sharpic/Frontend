@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import "./ImageModal.css";
 import Stack from 'react-bootstrap/Stack';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
@@ -24,34 +24,72 @@ function ImageModal(props) {
   const [_src, setSrc] = useState();
   const [_src2, setSrc2] = useState();
 
-  if (props.image.info.status) {
-    setimgSlider(true)
-    setSrc(window.location.href + "api/image/" + props.image.id);
-    setSrc2(window.location.href + "api/image/processed/" + props.image.id);
-  } else if(props.image.info.up !== -1) {
-    setimgSlider(true)
-    setSrc(window.location.href + "api/image/" + props.image.id);
-    setSrc2('processing.png');
-  } else {
-    setimgSlider(false)
-    setSrc(window.location.href + "api/image/" + props.image.id);
-    setSrc2('processing.png');
-  }
+  React.useEffect(() => {
+    if (props.image.info.status) {
+      setimgSlider(true);
+      setSrc(window.location.origin + "/api/image/" + props.image.id);
+      setSrc2(window.location.origin + "/api/image/processed/" + props.image.id);
+      setRadioValue(props.image.info.up);
+    } else if (props.image.info.up !== -1) {
+      setimgSlider(true);
+      setSrc(window.location.origin + "/api/image/" + props.image.id);
+      setSrc2('processing.png');
+      setRadioValue(props.image.info.up);
+    } else {
+      setimgSlider(false);
+      setSrc(window.location.origin + "/api/image/" + props.image.id);
+      setSrc2('processing.png');
+      setRadioValue(props.image.info.up);
+    }
+  }, [])
 
   return (
 
-    <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: "1000", backgroundColor: "white", width: "90vw", height: "90vh", border: "1px solid black",alignItems: "center" , borderRadius: "10px", overflow: "auto" }}>
+    <div className="ImageModal">
       {
-        props.imgSlider ? (
+        imgSlider ? (
           // true
-          <Stack style={{ width: "100%", height: '100%', alignItems: "center" }}>
-
-            <Row >
-              <img src={props._src} style={{ width: "50vw", height: "28vw", margin: "50px", maxWidth: "80%", minWidth: "80%" }} />
-            </Row>
-
+          <Stack
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+          >
             <Row>
-              <ButtonGroup className="mb-2" style={{ zIndex: "1" }}>
+              {/* if image's width > height, then maxWidth = minWidth = 80%
+                  else, maxWidth = minWidth = 30%
+              */}
+              <ReactCompareSlider className="processingImage"
+                itemOne={<ReactCompareSliderImage src={_src} style={{}} alt="Image one" />}
+                itemTwo={<ReactCompareSliderImage src={_src2} style={{}} alt="Image two" />}
+              />
+            </Row>
+            <Row>
+              <ButtonGroup>
+                <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Processing</Button>
+                <DropdownButton title="Download" variant="success">
+                  <Dropdown.Item href={_src} download>Original</Dropdown.Item>
+                  <Dropdown.Item href={_src2} download>Processed</Dropdown.Item>
+                </DropdownButton>
+                <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>Close</Button>
+              </ButtonGroup>
+            </Row>
+          </Stack>
+        ) : (
+          // false
+          <Stack
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+          >
+            <Row>
+              {/* width = props._src.width / 2 */}
+
+              <img id='defaultImage' src={_src} />
+            </Row>
+            <Row>
+              <ButtonGroup className="mb-2" style={{ zIndex: "1", display: 'none' }}>
                 {radios.map((radio, idx) => (
                   <ToggleButton
                     key={idx}
@@ -67,43 +105,21 @@ function ImageModal(props) {
                   </ToggleButton>
                 ))}
               </ButtonGroup>
-            </Row>
-            <Row>
-              <ButtonGroup>
-                <Button variant='danger' onClick={props.isProcessed} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Processing</Button>
-                <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>Close</Button>
+
+              
+              <ButtonGroup className="defaultButton">
+              <DropdownButton id='dropDown' title="Select Image" >
+                {/* select upper radio */}
+                <Dropdown.Item onClick={() => setRadioValue('-1')}>Default</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('0')}>SR</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('1')}>Restoration - wo scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('2')}>Restoration - w scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('3')}>VSR</Dropdown.Item>
+              </DropdownButton>
+                <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Processing</Button>
+                <Button variant='danger' onClick={props.openModal}>Close</Button>
               </ButtonGroup>
             </Row>
-
-
-          </Stack>
-        ) : (
-          // false
-          <Stack style={{ width: "100%", height: "100%", alignItems: "center" }}>
-
-            <Row>
-
-              <ReactCompareSlider style={{ width: "50vw", height: "28vw", margin: "50px", maxWidth:"80%", minWidth: "80%"}}
-                itemOne={<ReactCompareSliderImage src={props._src} alt="Image one" />}
-                itemTwo={<ReactCompareSliderImage src={props._src} style={{ filter: 'grayscale(1)' }} alt="Image two" />}
-              />
-            </Row>
-
-            <Row>
-
-            </Row>
-            <Row>
-              <ButtonGroup>
-                <Button variant='danger' onClick={props.isProcessed} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Processing</Button>
-                <DropdownButton title="Download" variant="success">
-                  <Dropdown.Item href={props._src.trim()} download>Original</Dropdown.Item>
-                  <Dropdown.Item href={props._src2.trim()} download>Processed</Dropdown.Item>
-                </DropdownButton>
-                <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>Close</Button>
-              </ButtonGroup>
-            </Row>
-
-
           </Stack>
         )
       }

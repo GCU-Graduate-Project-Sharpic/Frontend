@@ -27,7 +27,7 @@ function TopBar(props) {
           <Nav.Link href="#link">Settings</Nav.Link>
           <NavDropdown title="information" id="basic-nav-dropdown">
 
-            <NavDropdown.Item onClick={props.profileConfigurationHandler} >Account Preferences</NavDropdown.Item>
+            <NavDropdown.Item onClick={props.modalProfile} >Account Preferences</NavDropdown.Item>
 
             <NavDropdown.Divider />
             <NavDropdown.Item href="#action/3.2">
