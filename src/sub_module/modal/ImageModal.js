@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import "./ImageModal.css";
-import Stack from 'react-bootstrap/Stack';
-import Row from 'react-bootstrap/Row';
+import Image from 'react-bootstrap/Image'
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
+import Modal from 'react-bootstrap/Modal';
+import { ReactCompareSlider, ReactCompareSliderImage, styleFitContainer } from 'react-compare-slider';
 
 
 function ImageModal(props) {
-
   const radios = [
     { name: 'Default', value: '-1' },
     { name: 'SR', value: '0' },
@@ -19,6 +18,12 @@ function ImageModal(props) {
     { name: 'Restoration - w scratches', value: '2' },
     { name: 'VSR', value: '3' }
   ]
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const [radioValue, setRadioValue] = useState('0');
   const [imgSlider, setimgSlider] = useState(true);
   const [_src, setSrc] = useState();
@@ -41,54 +46,97 @@ function ImageModal(props) {
       setSrc2('processing.png');
       setRadioValue(props.image.info.up);
     }
-  }, [])
+  }, []);
+
 
   return (
 
-    <div className="ImageModal">
+    <div
+      className='modal show'
+      style={{
+        display: 'block',
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+      }}
+    >
       {
         imgSlider ? (
           // true
-          <Stack
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
+          <Modal.Dialog
+            show={show}
+            onHide={handleClose}
+            size="xl"
+            backdrop="static"
+            keyboard={false}
+            aria-labelledby="example-custom-modal-styling-title"
           >
-            <Row>
-              {/* if image's width > height, then maxWidth = minWidth = 80%
-                  else, maxWidth = minWidth = 30%
-              */}
+            <Modal.Header>
+              <Modal.Title>Image Comparison</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body id="modal_modified">
+
               <ReactCompareSlider className="processingImage"
                 itemOne={<ReactCompareSliderImage src={_src} style={{}} alt="Image one" />}
                 itemTwo={<ReactCompareSliderImage src={_src2} style={{}} alt="Image two" />}
               />
-            </Row>
-            <Row>
-              <ButtonGroup>
-                <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Processing</Button>
-                <DropdownButton title="Download" variant="success">
-                  <Dropdown.Item href={_src} download>Original</Dropdown.Item>
-                  <Dropdown.Item href={_src2} download>Processed</Dropdown.Item>
-                </DropdownButton>
-                <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>Close</Button>
-              </ButtonGroup>
-            </Row>
-          </Stack>
+
+            </Modal.Body>
+
+            <Modal.Footer>
+
+            <DropdownButton title="Download" variant="success">
+                <Dropdown.Item href={_src} download>Original</Dropdown.Item>
+                <Dropdown.Item href={_src2} download>Processed</Dropdown.Item>
+              </DropdownButton> <br />
+
+              <DropdownButton title='Select type' >
+                {/* select upper radio */}
+                <Dropdown.Item onClick={() => setRadioValue('-1')}>Default</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('0')}>SR</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('1')}>Restoration - wo scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('2')}>Restoration - w scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('3')}>VSR</Dropdown.Item>
+              </DropdownButton> <br />
+
+              
+              {
+                props.image.info.status ? (
+                  <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Run</Button>
+                ) : (
+                  <Button disabled variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ width: "100px", border: "0", backgroundColor: "blue", borderBlockColor: "blue" }}>Loading</Button>
+                )
+              }
+              <br />
+              <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>X</Button>
+
+            </Modal.Footer>
+          </Modal.Dialog>
+
+
         ) : (
           // false
-          <Stack
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
-          >
-            <Row>
-              {/* width = props._src.width / 2 */}
 
-              <img id='defaultImage' src={_src} />
-            </Row>
-            <Row>
+          <Modal.Dialog
+            show={show}
+            onHide={handleClose}
+            size="xl"
+            backdrop="static"
+            keyboard={false}
+            aria-labelledby="example-custom-modal-styling-title"
+          >
+            <Modal.Header>
+              <Modal.Title>Image Comparison</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body id="modal_modified">
+              <Image fluid='true' src={_src} />
+            </Modal.Body>
+
+            <Modal.Footer>
+
               <ButtonGroup className="mb-2" style={{ zIndex: "1", display: 'none' }}>
                 {radios.map((radio, idx) => (
                   <ToggleButton
@@ -106,24 +154,28 @@ function ImageModal(props) {
                 ))}
               </ButtonGroup>
 
-              
-              <ButtonGroup className="defaultButton">
-              <DropdownButton id='dropDown' title="Select Image" >
+              <br />
+
+
+
+              <DropdownButton title='Select type' >
                 {/* select upper radio */}
                 <Dropdown.Item onClick={() => setRadioValue('-1')}>Default</Dropdown.Item>
                 <Dropdown.Item onClick={() => setRadioValue('0')}>SR</Dropdown.Item>
                 <Dropdown.Item onClick={() => setRadioValue('1')}>Restoration - wo scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => setRadioValue('2')}>Restoration - w scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => setRadioValue('3')}>VSR</Dropdown.Item>
-              </DropdownButton>
-                <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Processing</Button>
-                <Button variant='danger' onClick={props.openModal}>Close</Button>
-              </ButtonGroup>
-            </Row>
-          </Stack>
+              </DropdownButton> <br />
+              <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Run</Button>
+              <br />
+              <Button variant='danger' onClick={props.openModal}>X</Button>
+
+
+            </Modal.Footer>
+          </Modal.Dialog>
         )
       }
-    </div>
+    </div >
   )
 }
 

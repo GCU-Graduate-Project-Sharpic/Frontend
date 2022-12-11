@@ -1,26 +1,79 @@
-.image{
+.image {
     float: left;
     width: 70%;
- 
+
 }
-.ImageList{
+
+.ImageList {
     margin-top: 10px;
     width: 80vw;
     height: 50vw;
     position: relative;
     float: left;
 }
-.ImageList>button{
+
+.ImageList>button {
     width: 200px;
     margin-top: 5px;
     margin-left: 45px;
 }
-.ListBody{
+
+.ListBody {
     float: left;
     margin: 20px;
 }
-.delete{
+
+.delete {
     width: 30px;
     height: 30px;
     position: absolute;
+}
+
+#imageCSSBig {
+    height: 200px;
+}
+#imageCSSmall {
+    height: 100px;
+}
+
+#imageMargin {
+    margin: 5px;
+    float: left;
+}
+
+#uploadButton {
+    margin-bottom: 10px;
+}
+
+#stackSize {
+    width: 100%;
+    align-items: center;
+
+}
+
+@media (max-width:550px) {
+    #imageView {
+        width: 95px;
+    }
+
+    #stackSize {
+        width: 100%;
+        align-items: center;
+    }
+
+    #uploadButton {
+        margin-bottom: 10px;
+    }
+
+    #imageCSSmall {
+        height: 95px;
+    }
+    #imageCSSBig {
+        height: 95px;
+    }
+
+    #imageMargin {
+        margin: 0px;
+        float: left;
+    }
 }

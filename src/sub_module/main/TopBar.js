@@ -24,16 +24,8 @@ function TopBar(props) {
 
         <Nav className="me-auto">
           <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#link">Settings</Nav.Link>
-          <NavDropdown title="information" id="basic-nav-dropdown">
-
-            <NavDropdown.Item onClick={props.modalProfile} >Account Preferences</NavDropdown.Item>
-
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.2">
-              Develper Github
-            </NavDropdown.Item>
-          </NavDropdown>
+          <Nav.Link onClick={props.modalProfile}>Settings</Nav.Link>
+          <Nav.Link href="https://github.com/GCU-Sharpic">Develper Github</Nav.Link>
         </Nav>
 
 

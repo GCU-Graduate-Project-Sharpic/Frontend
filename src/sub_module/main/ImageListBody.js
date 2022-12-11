@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ImageUploading from "react-images-uploading";
 import Stack from 'react-bootstrap/Stack';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import "./ImageListBody.css";
 
 function ImageListBody(props) {
@@ -36,31 +37,42 @@ function ImageListBody(props) {
         }) => (
           // write your building UI
           // <div className="upload__image-wrapper">
-          <Stack className="ImageList">
+          <Stack id="stackSize" className="ImageList">
             <Button
-
+              id="uploadButton"
               variant='primary'
               size='sm'
               onClick={onImageUpload} {...dragProps}>
               Click or Drop here
-            </Button>
-            <div >
-              {/* {imageList.map((image, index) => (
-                <div key={index} style={{ float: "left", margin: "20px" }}>
-                  <img src={image.data_url} alt="" width="300" height="200" onClick={() => props.openModal(image.data_url, 'processing.png')} />
-                  <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
-                </div>
-              ))} */}
+            </Button> 
+
+            <div style={{marginLeft: '4px'}}>
               {props.imageIds.map((image, index) => image.info.status ?
                 (
-                  <div key={index} style={{ float: "left", margin: "20px" }}>
-                    <img src={window.location.origin + "/api/image/processed/" + image.id} alt="" width="300" height="200" onClick={() => props.openModal(image)} />
-                    <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
+                  <div key={index} id="imageMargin" >
+
+                    <Card id="imageView">
+
+                      {
+                        props.small ? (
+                          <Card.Img id="imageCSSmall" variant="top" src={window.location.origin + "/api/image/processed/" + image.id} alt="" onClick={() => props.openModal(image)} />
+                        ) : (
+                          <Card.Img id="imageCSSBig" variant="top" src={window.location.origin + "/api/image/processed/" + image.id} alt="" onClick={() => props.openModal(image)} />
+                        )
+                      }
+                    </Card>
                   </div>
                 ) : (
-                  <div key={index} style={{ float: "left", margin: "20px" }}>
-                    <img src={window.location.origin + "/api/image/" + image.id} alt="" width="300" height="200" onClick={() => props.openModal(image)} />
-                    <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
+                  <div key={index} id="imageMargin" >
+                    <Card id="imageView">
+                    {
+                        props.small ? (
+                          <Card.Img id="imageCSSmall" variant="top" src={window.location.origin + "/api/image/" + image.id} alt="" onClick={() => props.openModal(image)} />
+                        ) : (
+                          <Card.Img id="imageCSSBig" variant="top" src={window.location.origin + "/api/image/" + image.id} alt="" onClick={() => props.openModal(image)} />
+                        )
+                      }
+                    </Card>
                   </div>
                 )
               )}
@@ -77,6 +89,11 @@ function ImageListBody(props) {
       </ImageUploading>
     </div>
   );
+}
+
+function changeStat(props) {
+  console.log("changeStat");
+  props.setSmall(!props.small);
 }
 
 export default ImageListBody;
