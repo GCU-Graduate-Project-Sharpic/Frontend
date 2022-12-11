@@ -14,13 +14,14 @@ import SideBar from './sub_module/main/SideBar';
 
 export default function App() {
   const [appShow, setAppShow] = useState(false);
-  const [small, setSmall] = useState(false);
 
   const [profileShow, setProfileShow] = useState(false);
   const [offcanvasShow, setOffcanvasShow] = useState(false);
 
-  const handleOffcanvasShow = () => setOffcanvasShow(true);
-  const handleOffcanvasClose = () => setOffcanvasShow(false);
+  const [name, setName] = useState('Name');
+  const [email, setEmail] = useState('Email');
+
+  const handleOffcanvasShow = () => setOffcanvasShow(!offcanvasShow);
 
   const getImageInfos = async (imageIds) => {
     let imageList = [];
@@ -38,14 +39,9 @@ export default function App() {
     setImageIds(imageList);
   }
 
-  const [name, setName] = useState('Name');
-  const [mail, setMail] = useState('Mail');
-  const [album_name, setAlbumName] = useState('Album Name');
 
-  const [albumId, setAlbumId] = useState(0);
-  const [albumIds, setAlbumIds] = React.useState([])
-
-  const [albums, setAlbums] = React.useState([]);
+  const [currentAlbum, setCurrentAlbum] = useState(null);
+  const [albumList, setAlbumList] = React.useState([])
 
   const [modalImage, setModalImage] = React.useState(null);
   const [imageIds, setImageIds] = React.useState([]);
@@ -58,22 +54,24 @@ export default function App() {
         }
       })
       .then((res) => {
+        setName(res.data.username);
+        setEmail(res.data.email);
         return axios.get(window.location.origin + "/api/album/list");
       })
       .then((res) => {
-        setAlbumIds(res.data.list);
-        if (albumId === 0) {
-          setAlbumId(res.data.list[0])
-          return axios.get(window.location.origin + "/api/album/" + res.data.list[0]);
+        setAlbumList(res.data.albumList)
+        if (currentAlbum === null) {
+          setCurrentAlbum(res.data.albumList[0]);
+          if (res.data.albumList[0].imageIds != null) {
+            getImageInfos(res.data.albumList[0].imageIds);
+          }
+          setAppShow(true);
+        } else {
+          const album = res.data.albumList.find((album) => album.id === currentAlbum.id)
+          setCurrentAlbum(album)
+          getImageInfos(album.imageIds);
+          setAppShow(true);
         }
-        return axios.get(window.location.origin + "/api/album/" + albumId);
-      })
-      .then((res) => {
-        // res.data = JSON.parse(res.data);
-        if (res.data.imageIds != null) {
-          getImageInfos(res.data.imageIds);
-        }
-        setAppShow(true);
       });
   }, []);
 
@@ -86,10 +84,10 @@ export default function App() {
       frm.append("images", img.file);
     }
     let url = window.location.origin + "/api/image/new/";
-    if (albumId === albumIds[0]) {
+    if (currentAlbum.id === albumList[0].id) {
       url = url + "0";
     } else {
-      url = url + albumId;
+      url = url + currentAlbum.id;
     }
     axios
       .post(url, frm, {
@@ -104,22 +102,22 @@ export default function App() {
       .then((res) => {
         if (res.data.status === "images uploaded!") {
           window.alert("Image uploaded")
-          return axios.get(window.location.origin + "/api/album/" + albumId);
+          return axios.get(window.location.origin + "/api/album/list");
         } else {
           console.log(res.status)
         }
       })
       .then((res) => {
-        // res.data = JSON.parse(res.data);
-        if (res.data.imageIds != null) {
-          getImageInfos(res.data.imageIds);
-        }
+        setAlbumList(res.data.albumList)
+        const album = res.data.albumList.find((album) => album.id === currentAlbum.id)
+        setCurrentAlbum(album)
+        getImageInfos(album.imageIds);
       });
 
   };
 
   return (
-    // appShow &&
+    appShow &&
     <div className="App">
       {/* header */}
       <div className="bg-lightBorder" >
@@ -130,11 +128,15 @@ export default function App() {
       {/** Add some margin */}
 
       <OffCanvas
-        handleClose={handleOffcanvasClose}
-        addAlbum={addAlbum}
+        handleOffcanvasShow={handleOffcanvasShow}
+        currentAlbum={currentAlbum}
+        albumList={albumList}
+        setCurrentAlbum={setCurrentAlbum}
+        setAlbumList={setAlbumList}
+        getImageInfos={getImageInfos}
         offcanvasShow={offcanvasShow}
         name={name}
-        mail={mail}
+        email={email}
       />
 
 
@@ -143,18 +145,20 @@ export default function App() {
         <div> {/** Main body */}
 
           {/** Add nav bar */}
-          <AlbumNavigation album_name={album_name} handleOffcanvasShow={handleOffcanvasShow} />
+          <AlbumNavigation albumTitle={currentAlbum.title} handleOffcanvasShow={handleOffcanvasShow} />
 
           <div direction="horizontal">
 
             <div className="SideBar">
               <SideBar
                 inOffCanvas={inOffCanvas}
-                handleOffcanvasClose={handleOffcanvasClose}
-                addAlbum={addAlbum}
-                offcanvasShow={offcanvasShow}
+                currentAlbum={currentAlbum}
+                albumList={albumList}
+                setCurrentAlbum={setCurrentAlbum}
+                setAlbumList={setAlbumList}
+                getImageInfos={getImageInfos}
                 name={name}
-                mail={mail}
+                email={email}
               />
             </div>
 
@@ -188,9 +192,9 @@ export default function App() {
 
       {
         profileShow &&
-          <div className="modal2">
-            <ProfileModal modalProfile={modalProfile} />
-          </div>
+        <div className="modal2">
+          <ProfileModal modalProfile={modalProfile} />
+        </div>
       }
       {
         modalImage != null && (
@@ -274,36 +278,8 @@ export default function App() {
 
       console.log(name);
 
-      setMail(newEmail);
+      setEmail(newEmail);
       setName(newName);
-    }
-  }
-
-  function addAlbum(current_list) {
-
-    console.log(current_list);
-
-    const list2 = document.querySelector('.list2');
-    const list3 = document.querySelector('.list3');
-    const list4 = document.querySelector('.list4');
-    const list5 = document.querySelector('.list5');
-
-    console.log(list2);
-
-    if (current_list == 1) {
-      list2.style.display = "block";
-      current_list += 1;
-    } else if (current_list == 2) {
-      list3.style.display = "block";
-      current_list += 1;
-    }
-
-    if (current_list == 2) {
-      list2.style.display = "none";
-      current_list -= 1;
-    } else if (current_list == 3) {
-      list3.style.display = "none";
-      current_list -= 1;
     }
   }
 }

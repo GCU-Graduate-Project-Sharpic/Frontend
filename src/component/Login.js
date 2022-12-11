@@ -25,9 +25,9 @@ function Login(props) {
           console.log("Not logged in")
         }
       })
-  });
+  }, []);
   
-  const appClick = () => {
+  const loginClick = () => {
     axios
       .post( // Login request
         window.location.origin + "/api/login",
@@ -48,9 +48,9 @@ function Login(props) {
       .catch((err) => alert(err));
   
   }
-  const appKeyPress = (e) => {
+  const enterKeyPress = (e) => {
     if (e.key === 'Enter') {
-      this.appClick();
+      loginClick();
     }
   }
   const register = (e) => {
@@ -59,7 +59,7 @@ function Login(props) {
 
   return (
     <div className="Auth-form-container">
-      <form className="Auth-form">
+      <div className="Auth-form">
         <div className="Auth-form-content">
           <h3 className="Auth-form-title">Sign In</h3>
           <div className="text-center">
@@ -85,16 +85,16 @@ function Login(props) {
               className="form-control mt-1"
               placeholder="Enter password"
               onChange={passwordChange}
-              onKeyDown={appKeyPress}
+              onKeyDown={enterKeyPress}
             />
           </div>
           <div className="d-grid gap-2 mt-3">
-            <button onClick={appClick} type="submit" className="btn btn-primary">
-              Submit
+            <button onClick={loginClick} className="btn btn-primary">
+              Login
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
