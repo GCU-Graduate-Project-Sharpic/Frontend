@@ -1,15 +1,23 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import "./Login.css";
 
-class Register extends Component {
-  state = {
-    username: '',
-    password: '',
-    email: ''
+function Register(props) {
+
+  const [username, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const nameChange = (e) => {
+    setName(e.target.value);
+  }
+  const passwordChange = (e) => {
+    setPassword(e.target.value);
+  }
+  const emailChange = (e) => {
+    setEmail(e.target.value);
   }
 
-  componentDidMount() {
+  useEffect(() => {
     axios.get(window.location.origin + "/api/user")
       .then((res) => {
         if (res.status === 200) {
@@ -18,32 +26,20 @@ class Register extends Component {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          console.log("Not logged in")        
+          console.log("Not logged in")
         }
       })
-  }
+  })
 
-  appChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  }
-  appClick = () => {
-    console.log(`username는 : ${this.state.username}\npw는 : ${this.state.password}\nemail은 : ${this.state.email}`);
-  }
-  appKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      this.appClick();
-    }
-  }
-  confirm = (e) => {
+  const confirm = (e) => {
+    console.log(`username는 : ${username}\npw는 : ${password}\nemail은 : ${email}`);
     axios
       .post( // Login request
         window.location.origin + "/api/signup",
         {
-          username: this.state.username,
-          password: this.state.password,
-          email: this.state.email
+          username: username,
+          password: password,
+          email: email
         },
         { 'Content-Type': 'application/json', withCredentials: true }
       )
@@ -57,23 +53,56 @@ class Register extends Component {
       })
       .catch((err) => alert(err));
   }
-  render() {
-    const { username, password, email } = this.state;
-    const { appChange, confirm, appKeyPress } = this;
-    return (
-      <div className="container-center-horizontal">
-        <div className="desktop-1 screen">
-          <h1 className="title">
-            Sharpic
-          </h1>
-          <input type="text" name="username" placeholder="Email Address" value={username} onChange={appChange} className="component border-2px-black email-address valign-text-middle roboto-normal-black-15px" />
-          <input type="password" name="password" placeholder="Password" value={password} onChange={appChange} className="overlap-group border-2px-black password valign-text-middle roboto-normal-black-15px" />
-          <input type="text" name="email" placeholder="Nickname" value={email} onChange={appChange} onKeyPress={appKeyPress} className="component border-2px-black email-address valign-text-middle roboto-normal-black-15px" />
-          <button onClick={confirm} className="button-1 log-in valign-text-middle">CONFIRM</button>
-        </div>
-      </div>
-    );
+  const login = (e) => {
+    window.location.replace("/login")
   }
+  return (
+    <div className="Auth-form-container">
+      <form className="Auth-form">
+        <div className="Auth-form-content">
+          <h3 className="Auth-form-title">Sign Up</h3>
+          <div className="text-center">
+            Already registered?{" "}
+            <span className="link-primary" onClick={login}>
+              Sign In
+            </span>
+          </div>
+          <div className="form-group mt-3">
+            <label>User Name</label>
+            <input
+              type="text"
+              className="form-control mt-1"
+              placeholder="e.g Jane Doe"
+              onChange={nameChange}
+            />
+          </div>
+          <div className="form-group mt-3">
+            <label>Email address</label>
+            <input
+              type="email"
+              className="form-control mt-1"
+              placeholder="Email Address"
+              onChange={emailChange}
+            />
+          </div>
+          <div className="form-group mt-3">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control mt-1"
+              placeholder="Password"
+              onChange={passwordChange}
+            />
+          </div>
+          <div className="d-grid gap-2 mt-3">
+            <button onClick={confirm} type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export default Register;

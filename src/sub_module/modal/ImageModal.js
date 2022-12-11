@@ -46,7 +46,8 @@ function ImageModal(props) {
       setSrc2('processing.png');
       setRadioValue(props.image.info.up);
     }
-  }, [])
+  }, []);
+
 
   return (
 
@@ -86,6 +87,11 @@ function ImageModal(props) {
 
             <Modal.Footer>
 
+            <DropdownButton title="Download" variant="success">
+                <Dropdown.Item href={_src} download>Original</Dropdown.Item>
+                <Dropdown.Item href={_src2} download>Processed</Dropdown.Item>
+              </DropdownButton> <br />
+
               <DropdownButton title='Select type' >
                 {/* select upper radio */}
                 <Dropdown.Item onClick={() => setRadioValue('-1')}>Default</Dropdown.Item>
@@ -93,16 +99,19 @@ function ImageModal(props) {
                 <Dropdown.Item onClick={() => setRadioValue('1')}>Restoration - wo scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => setRadioValue('2')}>Restoration - w scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => setRadioValue('3')}>VSR</Dropdown.Item>
-              </DropdownButton>
+              </DropdownButton> <br />
 
-              <ButtonGroup>
-                <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Processing</Button>
-                <DropdownButton title="Download" variant="success">
-                  <Dropdown.Item href={_src} download>Original</Dropdown.Item>
-                  <Dropdown.Item href={_src2} download>Processed</Dropdown.Item>
-                </DropdownButton>
-                <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>Close</Button>
-              </ButtonGroup>
+              
+              {
+                props.image.info.status ? (
+                  <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Run</Button>
+                ) : (
+                  <Button disabled variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ width: "100px", border: "0", backgroundColor: "blue", borderBlockColor: "blue" }}>Loading</Button>
+                )
+              }
+              <br />
+              <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>X</Button>
+
             </Modal.Footer>
           </Modal.Dialog>
 
@@ -145,19 +154,22 @@ function ImageModal(props) {
                 ))}
               </ButtonGroup>
 
+              <br />
 
-              <ButtonGroup>
-                <DropdownButton title='Select type' >
-                  {/* select upper radio */}
-                  <Dropdown.Item onClick={() => setRadioValue('-1')}>Default</Dropdown.Item>
-                  <Dropdown.Item onClick={() => setRadioValue('0')}>SR</Dropdown.Item>
-                  <Dropdown.Item onClick={() => setRadioValue('1')}>Restoration - wo scratches</Dropdown.Item>
-                  <Dropdown.Item onClick={() => setRadioValue('2')}>Restoration - w scratches</Dropdown.Item>
-                  <Dropdown.Item onClick={() => setRadioValue('3')}>VSR</Dropdown.Item>
-                </DropdownButton>
-                <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Processing</Button>
-                <Button variant='danger' onClick={props.openModal}>Close</Button>
-              </ButtonGroup>
+
+
+              <DropdownButton title='Select type' >
+                {/* select upper radio */}
+                <Dropdown.Item onClick={() => setRadioValue('-1')}>Default</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('0')}>SR</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('1')}>Restoration - wo scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('2')}>Restoration - w scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => setRadioValue('3')}>VSR</Dropdown.Item>
+              </DropdownButton> <br />
+              <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Run</Button>
+              <br />
+              <Button variant='danger' onClick={props.openModal}>X</Button>
+
 
             </Modal.Footer>
           </Modal.Dialog>

@@ -14,6 +14,8 @@ import SideBar from './sub_module/main/SideBar';
 
 export default function App() {
   const [appShow, setAppShow] = useState(false);
+  const [small, setSmall] = useState(false);
+
   const [profileShow, setProfileShow] = useState(false);
   const [offcanvasShow, setOffcanvasShow] = useState(false);
 
