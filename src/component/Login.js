@@ -9,7 +9,7 @@ class Login extends Component {
   }
   
   componentDidMount() {
-    axios.get("https://" + window.location.hostname + "/api/user")
+    axios.get(window.location.origin + "/api/user")
       .then((res) => {
         if (res.status === 200) {
           window.location.replace("/");
@@ -31,7 +31,7 @@ class Login extends Component {
   appClick = () => {
     axios
       .post( // Login request
-        "https://" + window.location.hostname + "/api/login",
+        window.location.origin + "/api/login",
         {
           username: this.state.username,
           password: this.state.password,

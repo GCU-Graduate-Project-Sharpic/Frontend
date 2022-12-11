@@ -16,8 +16,9 @@
 
 #defaultImage {
     margin: 50px;
-    max-width: 60%;
-    min-width: 10%;
+    object-fit: contain;
+    /* max-width: 60%;
+    min-width: 10%; */
 }
 
 .dropDown {
@@ -31,8 +32,9 @@
 .processingImage{
  
     margin: 50px;
-    max-width: 80%;
-    min-width: 80%;
+    object-fit: contain;
+    /* max-width: 80%;
+    min-width: 80%; */
 }
 
 @media (max-width:550px) {
@@ -53,8 +55,8 @@
     
     #defaultImage {
         margin: 50px;
-        max-width: 60%;
-        min-width: 10%;
+        /* max-width: 60%;
+        min-width: 10%; */
     }
 
     
@@ -68,8 +70,8 @@
     }
     .processingImage{
         margin: 50px;
-        max-width: 80%;
-        min-width: 80%;
+        /* max-width: 80%;
+        min-width: 80%; */
     }
     
 

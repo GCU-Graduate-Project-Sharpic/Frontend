@@ -13,73 +13,95 @@ import ImageModal from './sub_module/modal/ImageModal';
 import SideBar from './sub_module/main/SideBar';
 
 export default function App() {
+  const [appShow, setAppShow] = useState(false);
+  const [profileShow, setProfileShow] = useState(false);
+  const [offcanvasShow, setOffcanvasShow] = useState(false);
 
-  const [show, setShow] = useState(false);
-  const [imgSlider, setimgSlider] = useState(true);
-  const [_src, setSrc] = useState();
-  const [_src2, setSrc2] = useState();
+  const handleOffcanvasShow = () => setOffcanvasShow(true);
+  const handleOffcanvasClose = () => setOffcanvasShow(false);
+  // const profileConfigurationHandler = (change) => {
+  //   const modal = document.querySelector('.modal');
+  //   const body = document.querySelector('body');
 
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
-  const profileConfigurationHandler = (change) => {
-    const modal = document.querySelector('.modal');
-    const body = document.querySelector('body');
+  //   if (modal.classList.contains('show')) {
+  //     modal.classList.remove('show');
+  //     body.style.overflow = 'auto';
+  //   } else {
+  //     modal.classList.add('show');
+  //     body.style.overflow = 'hidden';
+  //   }
 
-    if (modal.classList.contains('show')) {
-      modal.classList.remove('show');
-      body.style.overflow = 'auto';
-    } else {
-      modal.classList.add('show');
-      body.style.overflow = 'hidden';
-    }
+  //   if (change === true) {
 
-    if (change === true) {
+  //     setMail(document.f.mail.value);
+  //     setName(document.f.name.value);
+  //     /** 
+  //     axios.get(window.location.origin + "/api/user")
+  //       .catch((err) => {
+  //         if (err.response.status === 401) {
+  //           window.location.replace("/login");
+  //         }
+  //       })
+  //       .then((res) => {
+  //         setName(res.data.name);
+  //         setMail(res.data.mail);
+  //       });
+  //       */
+  //   }
+  // }
 
-      setMail(document.f.mail.value);
-      setName(document.f.name.value);
-      /** 
-      axios.get(window.location.href + "api/user")
-        .catch((err) => {
-          if (err.response.status === 401) {
-            window.location.replace("/login");
-          }
-        })
+  const getImageInfos = async (imageIds) => {
+    let imageList = [];
+    for (let imageId of imageIds) {
+      await axios.get(window.location.origin + "/api/image/info/" + imageId)
         .then((res) => {
-          setName(res.data.name);
-          setMail(res.data.mail);
-        });
-        */
+          imageList.push({
+            id: imageId,
+            info: res.data
+          })
+        })
+      console.log("Inner for")
     }
+    console.log("outer for")
+    setImageIds(imageList);
   }
 
   const [name, setName] = useState('Name');
   const [mail, setMail] = useState('Mail');
   const [album_name, setAlbumName] = useState('Album Name');
 
-  const [albums, setAlbums] = React.useState([]);
-  const [albumId, setAlbumId] = React.useState(1)
+  const [albumId, setAlbumId] = useState(0);
+  const [albumIds, setAlbumIds] = React.useState([])
 
-  const [images, setImages] = React.useState([]);
+  const [albums, setAlbums] = React.useState([]);
+
+  const [modalImage, setModalImage] = React.useState(null);
   const [imageIds, setImageIds] = React.useState([]);
   const maxNumber = 69;
   React.useEffect(() => {
-    axios.get(window.location.href + "api/user")
+    axios.get(window.location.origin + "/api/user")
       .catch((err) => {
         if (err.response.status === 401) {
           window.location.replace("/login");
         }
       })
       .then((res) => {
-        return axios.get(window.location.href + "api/album/list");
+        return axios.get(window.location.origin + "/api/album/list");
       })
       .then((res) => {
-        return axios.get(window.location.href + "api/album/" + res.data.list[0]);
+        setAlbumIds(res.data.list);
+        if (albumId === 0) {
+          setAlbumId(res.data.list[0])
+          return axios.get(window.location.origin + "/api/album/" + res.data.list[0]);
+        }
+        return axios.get(window.location.origin + "/api/album/" + albumId);
       })
       .then((res) => {
         // res.data = JSON.parse(res.data);
         if (res.data.imageIds != null) {
-          setImageIds(res.data.imageIds);
+          getImageInfos(res.data.imageIds);
         }
+        setAppShow(true);
       });
   }, []);
 
@@ -87,14 +109,18 @@ export default function App() {
 
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-    var ori_img_length = images.length;
-    setImages(imageList);
     const frm = new FormData();
-    for (var img of imageList.slice(ori_img_length)) {
+    for (var img of imageList) {
       frm.append("images", img.file);
     }
+    let url = window.location.origin + "/api/image/new/";
+    if (albumId === albumIds[0]) {
+      url = url + "0";
+    } else {
+      url = url + albumId;
+    }
     axios
-      .post(window.location.href + "api/image/new/0/", frm, {
+      .post(url, frm, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -104,40 +130,37 @@ export default function App() {
         window.alert("Fail to upload image");
       })
       .then((res) => {
-        if (res.status === "files uploaded!") {
+        if (res.data.status === "images uploaded!") {
           window.alert("Image uploaded")
-          return axios.get(window.location.href + "api/album/list");
+          return axios.get(window.location.origin + "/api/album/" + albumId);
         } else {
           console.log(res.status)
         }
       })
       .then((res) => {
-        return axios.get(window.location.href + "api/album/" + res.data.list[0]);
-      })
-      .then((res) => {
         // res.data = JSON.parse(res.data);
         if (res.data.imageIds != null) {
-          setImageIds(res.data.imageIds);
+          getImageInfos(res.data.imageIds);
         }
       });
 
   };
 
   return (
+    appShow &&
     <div className="App">
       {/* header */}
       <div className="bg-lightBorder" >
         {/** Header */}
-        <TopBar handleShow={handleShow} profileConfigurationHandler={profileConfigurationHandler} />
+        <TopBar handleOffcanvasShow={handleOffcanvasShow} modalProfile={modalProfile} />
       </div>
 
-      <ProfileModal modalProfile={modalProfile} />
       {/** Add some margin */}
 
       <OffCanvas
-        handleClose={handleClose}
+        handleClose={handleOffcanvasClose}
         addAlbum={addAlbum}
-        show={show}
+        offcanvasShow={offcanvasShow}
         name={name}
         mail={mail}
       />
@@ -148,16 +171,16 @@ export default function App() {
         <div> {/** Main body */}
 
           {/** Add nav bar */}
-          <AlbumNavigation album_name={album_name} handleShow={handleShow} />
+          <AlbumNavigation album_name={album_name} handleOffcanvasShow={handleOffcanvasShow} />
 
           <div direction="horizontal">
 
             <div className="SideBar">
               <SideBar
                 inOffCanvas={inOffCanvas}
-                handleClose={handleClose}
+                handleOffcanvasClose={handleOffcanvasClose}
                 addAlbum={addAlbum}
-                show={show}
+                offcanvasShow={offcanvasShow}
                 name={name}
                 mail={mail}
               />
@@ -169,7 +192,6 @@ export default function App() {
             <div className="d-lg-none" >
               <ImageListBody
                 imageIds={imageIds}
-                images={images}
                 maxNumber={maxNumber}
                 onChange={onChange}
                 openModal={openModal}
@@ -179,7 +201,6 @@ export default function App() {
             <div className="d-none d-lg-block" style={{ width: '79%', float: 'right' }}>
               <ImageListBody
                 imageIds={imageIds}
-                images={images}
                 maxNumber={maxNumber}
                 onChange={onChange}
                 openModal={openModal}
@@ -193,60 +214,97 @@ export default function App() {
       </Stack> {/** End of horizontal stack */}
       {/* 슬라이더 팝업 */}
 
-      <div className="modal2">
-        <ImageModal imgSlider={imgSlider} _src={_src} _src2={_src2} setimgSlider={setimgSlider} openModal={openModal} isProcessed={isProcessed} />
-      </div>
+      {
+        profileShow &&
+          <div className="modal2">
+            <ProfileModal modalProfile={modalProfile} />
+          </div>
+      }
+      {
+        modalImage != null && (
+          <div className="modal2">
+            <ImageModal image={modalImage} openModal={openModal} setProcessing={setProcessing} />
+          </div>
+        )
+      }
     </div>
   );
 
-  function isProcessed() {
-    setimgSlider(!imgSlider);
+  function setProcessing(imageId, radioValue) {
+    console.log("radio value: ", radioValue);
+    axios.patch(window.location.origin + "/api/image/up/" + imageId + "/" + radioValue)
+      .catch((err) => {
+        window.alert("Fail to send processing request");
+      })
+      .then((res) => {
+        if (res.status == 200) {
+          window.alert("Send processing request");
+          return axios.get(window.location.origin + "/api/image/info/" + imageId)
+        }
+      })
+      .then((res) => {
+        let newImageIds = [...imageIds];
+        for (let image of newImageIds) {
+          if (image.id == imageId) {
+            image.info = res.data;
+          }
+        }
+        setImageIds(newImageIds);
+      })
   }
 
-  function openModal(_src, _src2) {
-
-    // disable scroll when modal is open
-    const body = document.querySelector('body');
-    body.style.overflow = 'hidden';
-
+  function openModal(image) {
     console.log("Button click");
-    const modal2 = document.querySelector('.modal2');
 
-    if (modal2.classList.contains('show')) {
-      modal2.classList.remove('show');
+    const body = document.querySelector('body');
+    if (modalImage != null) {
+      setModalImage(null);
       body.style.overflow = 'auto';
     } else {
-      modal2.classList.add('show');
+      setModalImage(image);
+      body.style.overflow = 'hidden';
     }
+    // const modal2 = document.querySelector('.modal2');
 
-    setSrc(_src);
-    setSrc2(_src2);
+    // if (modal2.classList.contains('show')) {
+    //   modal2.classList.remove('show');
+    //   body.style.overflow = 'auto';
+    // } else {
+    //   modal2.classList.add('show');
+    // }
   }
 
-  function modalProfile(change) {
-    const modal = document.querySelector('.modal');
-    const modal_body = document.querySelector('.modal_body');
+  function modalProfile(change, newName, newEmail) {
+    // const modal = document.querySelector('.modal');
+    // const modal_body = document.querySelector('.modal_body');
     const body = document.querySelector('body');
 
-    if (modal.classList.contains('show')) {
-      modal.classList.remove('show');
+    // if (modal.classList.contains('show')) {
+    //   modal.classList.remove('show');
+    //   body.style.overflow = 'auto';
+    // } else {
+    //   modal.classList.add('show');
+    //   modal_body.classList.add('show');
+    // }
+
+    if (profileShow) {
+      console.log("profile close");
+      setProfileShow(false);
       body.style.overflow = 'auto';
     } else {
-      modal.classList.add('show');
-      modal_body.classList.add('show');
+      console.log("profile open");
+      setProfileShow(true);
+      body.style.overflow = 'hidden';
     }
 
     if (change == true) {
       // get name and mail from html form 
-      var name = document.f.name.value;
-      var mail = document.f.mail.value;
 
       console.log(name);
 
-      setMail(mail);
-      setName(name);
+      setMail(newEmail);
+      setName(newName);
     }
-
   }
 
   function addAlbum(current_list) {

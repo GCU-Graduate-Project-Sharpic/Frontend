@@ -6,7 +6,7 @@ function OffCanvas(props) {
     const inOffCanvas = true;
 
     return (
-        <Offcanvas placement={'start'} show={props.show} onHide={props.handleClose}>
+        <Offcanvas placement={'start'} show={props.offcanvasShow} onHide={props.handleClose}>
 
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>Sharpic</Offcanvas.Title>
@@ -17,7 +17,7 @@ function OffCanvas(props) {
                     inOffCanvas={inOffCanvas}
                     handleClose={props.handleClose}
                     addAlbum={props.addAlbum}
-                    show={props.show}
+                    show={props.offcanvasShow}
                     name={props.name}
                     mail={props.mail}
                 />

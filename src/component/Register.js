@@ -10,7 +10,7 @@ class Register extends Component {
   }
 
   componentDidMount() {
-    axios.get("https://" + window.location.hostname + "/api/user")
+    axios.get(window.location.origin + "/api/user")
       .then((res) => {
         if (res.status === 200) {
           window.location.replace("/");
@@ -39,7 +39,7 @@ class Register extends Component {
   confirm = (e) => {
     axios
       .post( // Login request
-        "https://" + window.location.hostname + "/api/signup",
+        window.location.origin + "/api/signup",
         {
           username: this.state.username,
           password: this.state.password,
