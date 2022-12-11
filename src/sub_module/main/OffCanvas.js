@@ -3,28 +3,30 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import SideBar from "./SideBar";
 
 function OffCanvas(props) {
-    const inOffCanvas = true;
+  const inOffCanvas = true;
 
-    return (
-        <Offcanvas placement={'start'} show={props.offcanvasShow} onHide={props.handleClose}>
+  return (
+    <Offcanvas placement={'start'} show={props.offcanvasShow} onHide={props.handleOffcanvasShow}>
 
-            <Offcanvas.Header closeButton>
-                <Offcanvas.Title>Sharpic</Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
+      <Offcanvas.Header closeButton>
+        <Offcanvas.Title>Sharpic</Offcanvas.Title>
+      </Offcanvas.Header>
+      <Offcanvas.Body>
 
-                <SideBar
-                    inOffCanvas={inOffCanvas}
-                    handleClose={props.handleClose}
-                    addAlbum={props.addAlbum}
-                    show={props.offcanvasShow}
-                    name={props.name}
-                    mail={props.mail}
-                />
+        <SideBar
+          inOffCanvas={inOffCanvas}
+          currentAlbum={props.currentAlbum}
+          albumList={props.albumList}
+          setCurrentAlbum={props.setCurrentAlbum}
+          setAlbumList={props.setAlbumList}
+          getImageInfos={props.getImageInfos}
+          name={props.name}
+          email={props.email}
+        />
 
-            </Offcanvas.Body>
-        </Offcanvas>
-    )
+      </Offcanvas.Body>
+    </Offcanvas>
+  )
 }
 
 export default OffCanvas;

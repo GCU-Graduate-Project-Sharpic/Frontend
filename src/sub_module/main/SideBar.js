@@ -3,77 +3,74 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import ListGroup from 'react-bootstrap/ListGroup';
+import axios from 'axios';
 import "./SideBar.css";
 
 function SideBar(props) {
 
-    var hide_opt = props.inOffCanvas == false ? "d-none d-lg-block" : "d-lg-none";
+  var hide_opt = props.inOffCanvas == false ? "d-none d-lg-block" : "d-lg-none";
 
-    return (
-
-        <Card id='sidebar'
-         className={hide_opt}
-         // fit height of screen 
-            
-         >
-            <Card.Body>
-
-                <Card.Title>{props.name}</Card.Title>
-                <Card.Text>{props.mail}</Card.Text>
-
-                {/**Add dividor line */}
-                <hr></hr>
-
-                <ListGroup as="ol">
-
-                    <Button name="albumButton" className="albumSetting" style={{ marginBottom: '10px' }} onClick={() => props.addAlbum(1)} >Add album</Button>
-                    <ListGroup.Item
-                        as="li"
-                        className="list1"
-                    >
-                        <div className="ms-2 me-auto">
-                            <div className="fw-bold">All images</div>
-                            모든 내 사진
-                        </div>
-                        <Badge bg="primary" pill>
-                            속한 사진 숫자
-                        </Badge>
-                    </ListGroup.Item>
-
-
-                    <ListGroup.Item
-                        as="li"
-                        className="list2"
-                        style={{ display: 'none' }}
-                    >
-                        <div className="ms-2 me-auto">
-                            <div className="fw-bold">Tokyo Travel</div>
-                            도쿄 여행집
-                        </div>
-                        <Badge bg="primary" pill>
-                            속한 사진 숫자
-                        </Badge>
-                    </ListGroup.Item>
-
-
-                    <ListGroup.Item
-                        as="li"
-                        className="list3"
-                        style={{ display: 'none' }}
-                    >
-                        <div className="ms-2 me-auto">
-                            <div className="fw-bold">New york Travel</div>
-                            뉴욕 여행집
-                        </div>
-                        <Badge bg="primary" pill>
-                            속한 사진 숫자
-                        </Badge>
-                    </ListGroup.Item>
-                </ListGroup>
-            </Card.Body>
-        </Card>
-
+  function addAlbum() {
+    let newAlbumTitle = window.prompt("Enter new album title");
+    axios.post(window.location.origin + "/api/album/new", {
+      title: newAlbumTitle
+    },
+      { 'Content-Type': 'application/json', withCredentials: true }
     )
+      .then((res) => {
+        if (res.data.status == 'new album success') {
+          return axios.get(window.location.origin + "/api/album/list");
+        }
+      })
+      .then((res) => {
+        props.setAlbumList(res.data.albumList);
+      });
+  }
+
+  function changeAlbum(newAlbum) {
+    props.setCurrentAlbum(newAlbum);
+    props.getImageInfos(newAlbum.imageIds);
+  }
+
+  return (
+
+    <Card id='sidebar'
+      className={hide_opt}
+    // fit height of screen 
+
+    >
+      <Card.Body>
+
+        <Card.Title>{props.name}</Card.Title>
+        <Card.Text>{props.email}</Card.Text>
+
+        {/**Add dividor line */}
+        <hr></hr>
+
+        <ListGroup as="ol" defaultActiveKey={"#link" + props.albumList[0].id}>
+          <Button name="albumButton" className="albumSetting" style={{ marginBottom: '10px' }} onClick={() => addAlbum()} >Add album</Button>
+          {
+            props.albumList.map((album) => (
+              <ListGroup.Item
+                as="li"
+                href={"#link" + album.id}
+                onClick={() => changeAlbum(album)}
+                action
+              >
+                <div className="ms-2 me-auto">
+                  <div className="fw-bold">{album.title}</div>
+                </div>
+                <Badge bg="primary" pill>
+                  {album.imageIds.length}
+                </Badge>
+              </ListGroup.Item>
+            ))
+          }
+        </ListGroup>
+      </Card.Body>
+    </Card>
+
+  )
 }
 
 export default SideBar;
