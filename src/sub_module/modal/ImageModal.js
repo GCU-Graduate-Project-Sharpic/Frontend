@@ -21,10 +21,6 @@ function ImageModal(props) {
   ]
 
   const [imageInfo, setImageInfo] = useState({ info: { status: false, up: -1 } });
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const [typeButton, settypeButton] = useState('Select type');
  
@@ -221,21 +217,21 @@ function ImageModal(props) {
   }
 
   function selectType(typeValue){
-    if(typeValue == -1){
+    if(typeValue === -1){
       settypeButton("Default");
       setRadioValue('-1');
     }
-    else if(typeValue == 0){
+    else if(typeValue === 0){
       settypeButton("SR");
       setRadioValue('0');
     }
    
-    else if(typeValue == 1 ){
+    else if(typeValue === 1 ){
       
       settypeButton("Restoration - wo scratches");
       setRadioValue('1');
     }
-    else if(typeValue ==2){
+    else if(typeValue === 2){
       settypeButton("Restoration - w scratches");
       setRadioValue('2');
     }
