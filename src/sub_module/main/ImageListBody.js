@@ -1,24 +1,38 @@
+import ImageModal from '../modal/ImageModal';
 import React, { useEffect, useState } from 'react';
 import ImageUploading from "react-images-uploading";
 import Stack from 'react-bootstrap/Stack';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import axios from 'axios';
 import "./ImageListBody.css";
 
 function ImageListBody(props) {
   const [images, setImages] = React.useState([]);
+  const [imageInfos, setImageInfos] = React.useState([]);
+  const [modalImageId, setModalImageId] = React.useState(null);
+
+  const getImageInfos = async (imageIds) => {
+    let newImageInfos = [];
+    for (let imageId of imageIds) {
+      await axios.get(window.location.origin + "/api/image/info/" + imageId)
+        .then((res) => {
+          newImageInfos.push({
+            id: imageId,
+            info: res.data
+          })
+        })
+    }
+    setImageInfos(newImageInfos);
+  }
+
+  React.useEffect(() => {
+    getImageInfos(props.imageIds);
+  }, [props.imageIds])
 
   return (
 
     <div style={{ width: '100%' }} >
-      {/* {props.imageIds.map((imageId, index) => (
-        <div key={index + "-grid"} className="image" style={{ float: 'left', width: '70%' }}>
-          <a href={window.location.origin + "/api/image/" + imageId} target="_blank" rel="noreferrer">
-            <img src={window.location.origin + "/api/image/" + imageId} alt="" width="500" />
-          </a>
-        </div>
-      ))} */}
-
       <ImageUploading
         multiple
         value={images}
@@ -44,56 +58,49 @@ function ImageListBody(props) {
               size='sm'
               onClick={onImageUpload} {...dragProps}>
               Click or Drop here
-            </Button> 
+            </Button>
 
-            <div style={{marginLeft: '4px'}}>
-              {props.imageIds.map((image, index) => image.info.status ?
+            <div style={{ marginLeft: '4px' }}>
+              {imageInfos.map((image, index) => image.info.status ?
                 (
                   <div key={index} id="imageMargin" >
-
                     <Card id="imageView">
-
-                      {
-                        props.small ? (
-                          <Card.Img id="imageCSSmall" variant="top" src={window.location.origin + "/api/image/processed/" + image.id} alt="" onClick={() => props.openModal(image)} />
-                        ) : (
-                          <Card.Img id="imageCSSBig" variant="top" src={window.location.origin + "/api/image/processed/" + image.id} alt="" onClick={() => props.openModal(image)} />
-                        )
-                      }
+                      <Card.Img id="imageCSSBig" variant="top" src={window.location.origin + "/api/image/processed/" + image.id + "?temp=" + Math.random().toString(36).substring(2, 12)} alt="" onClick={() => openModal(image)} />
                     </Card>
                   </div>
                 ) : (
                   <div key={index} id="imageMargin" >
                     <Card id="imageView">
-                    {
-                        props.small ? (
-                          <Card.Img id="imageCSSmall" variant="top" src={window.location.origin + "/api/image/" + image.id} alt="" onClick={() => props.openModal(image)} />
-                        ) : (
-                          <Card.Img id="imageCSSBig" variant="top" src={window.location.origin + "/api/image/" + image.id} alt="" onClick={() => props.openModal(image)} />
-                        )
-                      }
+                      <Card.Img id="imageCSSBig" variant="top" src={window.location.origin + "/api/image/" + image.id} alt="" onClick={() => openModal(image)} />
                     </Card>
                   </div>
                 )
               )}
-              {/* {imageIds.map((imageId, index) => (
-                <div key={index} style={{ marginTop: '10px', float: "left", margin: "20px", marginRight: "25px" }}>                                    
-                  <img src={window.location.origin + "/api/image/" + imageId} alt="" width="300" height="200" onClick={() => <ImageModal _src=(window.location.origin + "/api/image/" + imageId) _src2=(window.location.origin + "/api/image/processed/" + imageId)></ImageModal>/>
-                  <img src='delete.png' style={{ width: "30px", height: "30px", position: "absolute" }} alt='close' z-index='3' onClick={() => onImageRemove(index)} />
-                </div>
-              ))} */}
             </div>
           </Stack>
         )}
 
       </ImageUploading>
+      {
+        modalImageId != null && (
+          <ImageModal imageId={modalImageId} getImageInfos={getImageInfos} openModal={openModal} />
+        )
+      }
     </div>
   );
-}
 
-function changeStat(props) {
-  console.log("changeStat");
-  props.setSmall(!props.small);
+  function openModal(image) {
+    console.log("Button click");
+
+    const body = document.querySelector('body');
+    if (modalImageId != null) {
+      setModalImageId(null);
+      body.style.overflow = 'auto';
+    } else {
+      setModalImageId(image.id);
+      body.style.overflow = 'hidden';
+    }
+  }
 }
 
 export default ImageListBody;

@@ -7,6 +7,7 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
 import { ReactCompareSlider, ReactCompareSliderImage, styleFitContainer } from 'react-compare-slider';
 
 
@@ -19,6 +20,7 @@ function ImageModal(props) {
     { name: 'VSR', value: '3' }
   ]
 
+  const [imageInfo, setImageInfo] = useState({ info: { status: false, up: -1 } });
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -32,23 +34,43 @@ function ImageModal(props) {
   const [_src2, setSrc2] = useState();
 
   React.useEffect(() => {
-    if (props.image.info.status) {
+    axios.get(window.location.origin + "/api/image/info/" + props.imageId)
+      .then((res) => {
+        setImageInfo({
+          id: props.imageId,
+          info: res.data
+        });
+      })
+  }, []);
+
+  React.useEffect(() => {
+    if (imageInfo.info.status) {
       setimgSlider(true);
-      setSrc(window.location.origin + "/api/image/" + props.image.id);
-      setSrc2(window.location.origin + "/api/image/processed/" + props.image.id);
-      setRadioValue(props.image.info.up);
-    } else if (props.image.info.up !== -1) {
+      setSrc(window.location.origin + "/api/image/" + props.imageId);
+      setSrc2(window.location.origin + "/api/image/processed/" + props.imageId + "?temp=" + Math.random().toString(36).substring(2, 12));
+      setRadioValue(imageInfo.info.up);
+    } else if (imageInfo.info.up !== -1) {
       setimgSlider(true);
-      setSrc(window.location.origin + "/api/image/" + props.image.id);
+      setSrc(window.location.origin + "/api/image/" + props.imageId);
       setSrc2('processing.png');
-      setRadioValue(props.image.info.up);
+      setRadioValue(imageInfo.info.up);
+      const interval = setInterval(() => {
+        axios.get(window.location.origin + "/api/image/info/" + props.imageId)
+          .then((res) => {
+            setImageInfo({
+              id: props.imageId,
+              info: res.data
+            });
+          })
+        clearInterval(interval);
+      }, 3000)
     } else {
       setimgSlider(false);
-      setSrc(window.location.origin + "/api/image/" + props.image.id);
+      setSrc(window.location.origin + "/api/image/" + props.imageId);
       setSrc2('processing.png');
-      setRadioValue(props.image.info.up);
+      setRadioValue(imageInfo.info.up);
     }
-  }, []);
+  }, [imageInfo]);
 
 
   return (
@@ -67,8 +89,7 @@ function ImageModal(props) {
         imgSlider ? (
           // true
           <Modal.Dialog
-            show={show}
-            onHide={handleClose}
+            onHide={props.openModal}
             size="xl"
             backdrop="static"
             keyboard={false}
@@ -89,7 +110,7 @@ function ImageModal(props) {
 
             <Modal.Footer>
 
-            <DropdownButton title="Download" variant="success">
+              <DropdownButton title="Download" variant="success">
                 <Dropdown.Item href={_src} download>Original</Dropdown.Item>
                 <Dropdown.Item href={_src2} download>Processed</Dropdown.Item>
               </DropdownButton> <br />
@@ -103,12 +124,12 @@ function ImageModal(props) {
                 <Dropdown.Item onClick={() => selectType(3)}>VSR</Dropdown.Item>
               </DropdownButton> <br />
 
-              
+
               {
-                props.image.info.status ? (
-                  <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Run</Button>
+                imageInfo.info.status ? (
+                  <Button variant='danger' onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Run</Button>
                 ) : (
-                  <Button disabled variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ width: "100px", border: "0", backgroundColor: "blue", borderBlockColor: "blue" }}>Loading</Button>
+                  <Button disabled variant='danger' onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ width: "100px", border: "0", backgroundColor: "blue", borderBlockColor: "blue" }}>Loading</Button>
                 )
               }
               <br />
@@ -122,8 +143,7 @@ function ImageModal(props) {
           // false
 
           <Modal.Dialog
-            show={show}
-            onHide={handleClose}
+            onHide={props.openModal}
             size="xl"
             backdrop="static"
             keyboard={false}
@@ -168,7 +188,7 @@ function ImageModal(props) {
                 <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(3)}>VSR</Dropdown.Item>
               </DropdownButton> <br />
-              <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)}  style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Run</Button>
+              <Button variant='danger' onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Run</Button>
               <br />
               <Button variant='danger' onClick={props.openModal}>X</Button>
 
@@ -177,10 +197,29 @@ function ImageModal(props) {
           </Modal.Dialog>
         )
       }
-
-      
-    </div >
+    </div>
   )
+
+  function setProcessing(imageId, radioValue) {
+    console.log("radio value: ", radioValue);
+    axios.patch(window.location.origin + "/api/image/up/" + imageId + "/" + radioValue)
+      .catch((err) => {
+        window.alert("Fail to send processing request");
+      })
+      .then((res) => {
+        if (res.status == 200) {
+          window.alert("Send processing request");
+          return axios.get(window.location.origin + "/api/image/info/" + imageId)
+        }
+      })
+      .then((res) => {
+        setImageInfo({
+          id: imageId,
+          info: res.data
+        });
+      })
+  }
+
   function selectType(typeValue){
     if(typeValue == -1){
       settypeButton("Default");

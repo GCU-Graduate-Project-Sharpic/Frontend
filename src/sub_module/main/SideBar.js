@@ -29,7 +29,7 @@ function SideBar(props) {
 
   function changeAlbum(newAlbum) {
     props.setCurrentAlbum(newAlbum);
-    props.getImageInfos(newAlbum.imageIds);
+    props.setImageIds(newAlbum.imageIds);
   }
 
   return (
@@ -47,7 +47,7 @@ function SideBar(props) {
         {/**Add dividor line */}
         <hr></hr>
 
-        <ListGroup as="ol" defaultActiveKey={"#link" + props.albumList[0].id}>
+        <ListGroup as="ol" defaultActiveKey={"#link" + props.currentAlbum.id}>
           <Button name="albumButton" className="albumSetting" style={{ marginBottom: '10px' }} onClick={() => addAlbum()} >Add album</Button>
           {
             props.albumList.map((album) => (

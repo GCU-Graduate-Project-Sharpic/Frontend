@@ -19,7 +19,7 @@ function OffCanvas(props) {
           albumList={props.albumList}
           setCurrentAlbum={props.setCurrentAlbum}
           setAlbumList={props.setAlbumList}
-          getImageInfos={props.getImageInfos}
+          setImageIds={props.setImageIds}
           name={props.name}
           email={props.email}
         />

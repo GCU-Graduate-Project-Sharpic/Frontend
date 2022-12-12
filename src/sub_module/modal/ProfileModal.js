@@ -19,7 +19,13 @@ function ProfileModal(props) {
     <div>
       <div
         className="modal show"
-        style={{ display: 'block', position: 'initial' }}
+        style={{
+        display: 'block',
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+      }}
       >
         <Modal.Dialog>
           <Modal.Header>
