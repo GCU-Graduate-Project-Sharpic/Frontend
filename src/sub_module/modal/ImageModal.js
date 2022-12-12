@@ -24,6 +24,8 @@ function ImageModal(props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [typeButton, settypeButton] = useState('Select type');
+ 
   const [radioValue, setRadioValue] = useState('0');
   const [imgSlider, setimgSlider] = useState(true);
   const [_src, setSrc] = useState();
@@ -92,13 +94,13 @@ function ImageModal(props) {
                 <Dropdown.Item href={_src2} download>Processed</Dropdown.Item>
               </DropdownButton> <br />
 
-              <DropdownButton title='Select type' >
+              <DropdownButton title={typeButton} >
                 {/* select upper radio */}
-                <Dropdown.Item onClick={() => setRadioValue('-1')}>Default</Dropdown.Item>
-                <Dropdown.Item onClick={() => setRadioValue('0')}>SR</Dropdown.Item>
-                <Dropdown.Item onClick={() => setRadioValue('1')}>Restoration - wo scratches</Dropdown.Item>
-                <Dropdown.Item onClick={() => setRadioValue('2')}>Restoration - w scratches</Dropdown.Item>
-                <Dropdown.Item onClick={() => setRadioValue('3')}>VSR</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(-1)}>Default</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(1)}>Restoration - wo scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(3)}>VSR</Dropdown.Item>
               </DropdownButton> <br />
 
               
@@ -158,15 +160,15 @@ function ImageModal(props) {
 
 
 
-              <DropdownButton title='Select type' >
+              <DropdownButton title={typeButton} >
                 {/* select upper radio */}
-                <Dropdown.Item onClick={() => setRadioValue('-1')}>Default</Dropdown.Item>
-                <Dropdown.Item onClick={() => setRadioValue('0')}>SR</Dropdown.Item>
-                <Dropdown.Item onClick={() => setRadioValue('1')}>Restoration - wo scratches</Dropdown.Item>
-                <Dropdown.Item onClick={() => setRadioValue('2')}>Restoration - w scratches</Dropdown.Item>
-                <Dropdown.Item onClick={() => setRadioValue('3')}>VSR</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(-1)}>Default</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(1)}>Restoration - wo scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(3)}>VSR</Dropdown.Item>
               </DropdownButton> <br />
-              <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)} style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Run</Button>
+              <Button variant='danger' onClick={() => props.setProcessing(props.image.id, radioValue)}  style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Run</Button>
               <br />
               <Button variant='danger' onClick={props.openModal}>X</Button>
 
@@ -175,8 +177,36 @@ function ImageModal(props) {
           </Modal.Dialog>
         )
       }
+
+      
     </div >
   )
+  function selectType(typeValue){
+    if(typeValue == -1){
+      settypeButton("Default");
+      setRadioValue('-1');
+    }
+    else if(typeValue == 0){
+      settypeButton("SR");
+      setRadioValue('0');
+    }
+   
+    else if(typeValue == 1 ){
+      
+      settypeButton("Restoration - wo scratches");
+      setRadioValue('1');
+    }
+    else if(typeValue ==2){
+      settypeButton("Restoration - w scratches");
+      setRadioValue('2');
+    }
+    else {
+      settypeButton("VSR");
+      setRadioValue('3');
+    }
+  }
+
+ 
 }
 
 export default ImageModal
