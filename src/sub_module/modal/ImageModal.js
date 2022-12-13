@@ -91,8 +91,8 @@ function ImageModal(props) {
             keyboard={false}
             aria-labelledby="example-custom-modal-styling-title"
           >
-            <Modal.Header>
-              <Modal.Title>Image Comparison</Modal.Title>
+            <Modal.Header >
+              <Modal.Title  style={{fontWeight:"bold"}}>Image Comparison</Modal.Title>
             </Modal.Header>
 
             <Modal.Body id="modal_modified">
@@ -106,12 +106,12 @@ function ImageModal(props) {
 
             <Modal.Footer>
 
-              <DropdownButton title="Download" variant="success">
+              <DropdownButton title="Download" variant="dark">
                 <Dropdown.Item href={_src} download>Original</Dropdown.Item>
                 <Dropdown.Item href={_src2} download>Processed</Dropdown.Item>
               </DropdownButton> <br />
 
-              <DropdownButton title={typeButton} >
+              <DropdownButton variant="secondary" title={typeButton} >
                 {/* select upper radio */}
                 <Dropdown.Item onClick={() => selectType(-1)}>Default</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
@@ -123,13 +123,13 @@ function ImageModal(props) {
 
               {
                 imageInfo.info.status ? (
-                  <Button variant='danger' onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ width: "100px", backgroundColor: "blue", borderBlockColor: "blue", border: "0" }}>Run</Button>
+                  <Button variant="outline-dark" onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ width: "100px", border: "0" }}>Run</Button>
                 ) : (
-                  <Button disabled variant='danger' onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ width: "100px", border: "0", backgroundColor: "blue", borderBlockColor: "blue" }}>Loading</Button>
+                  <Button disabled variant="light" onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ width: "100px", border: "0" }}>Loading</Button>
                 )
               }
               <br />
-              <Button variant='danger' onClick={props.openModal} style={{ width: "100px", border: "0" }}>X</Button>
+              <Button variant="danger" onClick={props.openModal} >X</Button>
 
             </Modal.Footer>
           </Modal.Dialog>
@@ -145,8 +145,8 @@ function ImageModal(props) {
             keyboard={false}
             aria-labelledby="example-custom-modal-styling-title"
           >
-            <Modal.Header>
-              <Modal.Title>Image Comparison</Modal.Title>
+            <Modal.Header  >
+              <Modal.Title style={{fontWeight:"bold"}}>Image Comparison</Modal.Title>
             </Modal.Header>
 
             <Modal.Body id="modal_modified">
@@ -176,7 +176,7 @@ function ImageModal(props) {
 
 
 
-              <DropdownButton title={typeButton} >
+              <DropdownButton variant="dark" title={typeButton} >
                 {/* select upper radio */}
                 <Dropdown.Item onClick={() => selectType(-1)}>Default</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
@@ -184,9 +184,9 @@ function ImageModal(props) {
                 <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(3)}>VSR</Dropdown.Item>
               </DropdownButton> <br />
-              <Button variant='danger' onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ backgroundColor: "blue", borderBlockColor: "blue" }}>Run</Button>
+              <Button variant="secondary" onClick={() => setProcessing(imageInfo.id, radioValue)} >Run</Button>
               <br />
-              <Button variant='danger' onClick={props.openModal}>X</Button>
+              <Button variant="danger" onClick={props.openModal}>X</Button>
 
 
             </Modal.Footer>
