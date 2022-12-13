@@ -29,7 +29,7 @@ function SideBar(props) {
 
   function changeAlbum(newAlbum) {
     props.setCurrentAlbum(newAlbum);
-    props.getImageInfos(newAlbum.imageIds);
+    props.setImageIds(newAlbum.imageIds);
   }
 
   return (
@@ -46,21 +46,20 @@ function SideBar(props) {
 
         {/**Add dividor line */}
         <hr></hr>
-
-        <ListGroup as="ol" defaultActiveKey={"#link" + props.albumList[0].id}>
-          <Button name="albumButton" className="albumSetting" style={{ marginBottom: '10px' }} onClick={() => addAlbum()} >Add album</Button>
+        <Button variant="outline-secondary" name="albumButton" className="albumSetting" style={{ marginBottom: '10px' }} onClick={() => addAlbum()} >Add album</Button>
+        <ListGroup  defaultActiveKey={"#link" + props.currentAlbum.id}>
           {
             props.albumList.map((album) => (
               <ListGroup.Item
                 as="li"
                 href={"#link" + album.id}
                 onClick={() => changeAlbum(album)}
-                action
+                action variant="light"
               >
-                <div className="ms-2 me-auto">
+                <div >
                   <div className="fw-bold">{album.title}</div>
                 </div>
-                <Badge bg="primary" pill>
+                <Badge bg="secondary" pill>
                   {album.imageIds.length}
                 </Badge>
               </ListGroup.Item>

@@ -9,7 +9,6 @@ import "./Main.css";
 import ProfileModal from './sub_module/modal/ProfileModal';
 import ImageListBody from './sub_module/main/ImageListBody';
 import AlbumNavigation from './sub_module/main/AlbumNavigation';
-import ImageModal from './sub_module/modal/ImageModal';
 import SideBar from './sub_module/main/SideBar';
 
 export default function App() {
@@ -23,29 +22,12 @@ export default function App() {
 
   const handleOffcanvasShow = () => setOffcanvasShow(!offcanvasShow);
 
-  const getImageInfos = async (imageIds) => {
-    let imageList = [];
-    for (let imageId of imageIds) {
-      await axios.get(window.location.origin + "/api/image/info/" + imageId)
-        .then((res) => {
-          imageList.push({
-            id: imageId,
-            info: res.data
-          })
-        })
-      console.log("Inner for")
-    }
-    console.log("outer for")
-    setImageIds(imageList);
-  }
-
-
   const [currentAlbum, setCurrentAlbum] = useState(null);
   const [albumList, setAlbumList] = React.useState([])
 
-  const [modalImage, setModalImage] = React.useState(null);
   const [imageIds, setImageIds] = React.useState([]);
   const maxNumber = 69;
+
   React.useEffect(() => {
     axios.get(window.location.origin + "/api/user")
       .catch((err) => {
@@ -63,13 +45,13 @@ export default function App() {
         if (currentAlbum === null) {
           setCurrentAlbum(res.data.albumList[0]);
           if (res.data.albumList[0].imageIds != null) {
-            getImageInfos(res.data.albumList[0].imageIds);
+            setImageIds(res.data.albumList[0].imageIds)
           }
           setAppShow(true);
         } else {
           const album = res.data.albumList.find((album) => album.id === currentAlbum.id)
           setCurrentAlbum(album)
-          getImageInfos(album.imageIds);
+          setImageIds(album.imageIds);
           setAppShow(true);
         }
       });
@@ -77,7 +59,7 @@ export default function App() {
 
   const inOffCanvas = false;
 
-  const onChange = (imageList, addUpdateIndex) => {
+  const onChange = (imageList) => {
     // data for submit
     const frm = new FormData();
     for (var img of imageList) {
@@ -111,9 +93,8 @@ export default function App() {
         setAlbumList(res.data.albumList)
         const album = res.data.albumList.find((album) => album.id === currentAlbum.id)
         setCurrentAlbum(album)
-        getImageInfos(album.imageIds);
+        setImageIds(album.imageIds);
       });
-
   };
 
   return (
@@ -133,7 +114,7 @@ export default function App() {
         albumList={albumList}
         setCurrentAlbum={setCurrentAlbum}
         setAlbumList={setAlbumList}
-        getImageInfos={getImageInfos}
+        setImageIds={setImageIds}
         offcanvasShow={offcanvasShow}
         name={name}
         email={email}
@@ -144,9 +125,6 @@ export default function App() {
 
         <div> {/** Main body */}
 
-          {/** Add nav bar */}
-          <AlbumNavigation albumTitle={currentAlbum.title} handleOffcanvasShow={handleOffcanvasShow} />
-
           <div direction="horizontal">
 
             <div className="SideBar">
@@ -156,11 +134,14 @@ export default function App() {
                 albumList={albumList}
                 setCurrentAlbum={setCurrentAlbum}
                 setAlbumList={setAlbumList}
-                getImageInfos={getImageInfos}
+                setImageIds={setImageIds}
                 name={name}
                 email={email}
               />
             </div>
+
+            {/** Add nav bar */}
+            <AlbumNavigation albumTitle={currentAlbum.title} handleOffcanvasShow={handleOffcanvasShow} />
 
 
             {/* Align each items into center */}
@@ -170,7 +151,6 @@ export default function App() {
                 imageIds={imageIds}
                 maxNumber={maxNumber}
                 onChange={onChange}
-                openModal={openModal}
               />
             </div>
 
@@ -179,7 +159,6 @@ export default function App() {
                 imageIds={imageIds}
                 maxNumber={maxNumber}
                 onChange={onChange}
-                openModal={openModal}
               />
             </div>
 
@@ -192,63 +171,12 @@ export default function App() {
 
       {
         profileShow &&
-        <div className="modal2">
-          <ProfileModal modalProfile={modalProfile} />
-        </div>
+        <ProfileModal modalProfile={modalProfile} />
       }
-      {
-        modalImage != null && (
-          <div className="modal2">
-            <ImageModal image={modalImage} openModal={openModal} setProcessing={setProcessing} />
-          </div>
-        )
-      }
+
     </div>
   );
 
-  function setProcessing(imageId, radioValue) {
-    console.log("radio value: ", radioValue);
-    axios.patch(window.location.origin + "/api/image/up/" + imageId + "/" + radioValue)
-      .catch((err) => {
-        window.alert("Fail to send processing request");
-      })
-      .then((res) => {
-        if (res.status == 200) {
-          window.alert("Send processing request");
-          return axios.get(window.location.origin + "/api/image/info/" + imageId)
-        }
-      })
-      .then((res) => {
-        let newImageIds = [...imageIds];
-        for (let image of newImageIds) {
-          if (image.id == imageId) {
-            image.info = res.data;
-          }
-        }
-        setImageIds(newImageIds);
-      })
-  }
-
-  function openModal(image) {
-    console.log("Button click");
-
-    const body = document.querySelector('body');
-    if (modalImage != null) {
-      setModalImage(null);
-      body.style.overflow = 'auto';
-    } else {
-      setModalImage(image);
-      body.style.overflow = 'hidden';
-    }
-    // const modal2 = document.querySelector('.modal2');
-
-    // if (modal2.classList.contains('show')) {
-    //   modal2.classList.remove('show');
-    //   body.style.overflow = 'auto';
-    // } else {
-    //   modal2.classList.add('show');
-    // }
-  }
 
   function modalProfile(change, newName, newEmail) {
     // const modal = document.querySelector('.modal');

@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import "./Login.css";
+import Button from 'react-bootstrap/Button';
 
 function Login(props) {
 
-  const[username, setName]=useState('');
-  const[password, setPassword]=useState('');
-  const nameChange=(e)=>{
+  const [username, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const nameChange = (e) => {
     setName(e.target.value);
   }
-  const passwordChange=(e)=>{
+  const passwordChange = (e) => {
     setPassword(e.target.value);
   }
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     axios.get(window.location.origin + "/api/user")
       .then((res) => {
         if (res.status === 200) {
@@ -26,7 +27,7 @@ function Login(props) {
         }
       })
   }, []);
-  
+
   const loginClick = () => {
     axios
       .post( // Login request
@@ -46,7 +47,7 @@ function Login(props) {
         }
       })
       .catch((err) => alert(err));
-  
+
   }
   const enterKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -59,15 +60,12 @@ function Login(props) {
 
   return (
     <div className="Auth-form-container">
-      <div className="Auth-form">
+      <div className="Auth-form" >
         <div className="Auth-form-content">
-          <h3 className="Auth-form-title">Sign In</h3>
-          <div className="text-center">
-            Not registered yet?{" "}
-            <span className="link-primary" onClick={register}>
-              Sign Up
-            </span>
+          <div className="sharpic">
+            <img src="sharpic3.png" style={{ width: "319px", height: "125px"}} />
           </div>
+          <br></br>
           <div className="form-group mt-3">
             <label>User Name</label>
             <input
@@ -88,14 +86,26 @@ function Login(props) {
               onKeyDown={enterKeyPress}
             />
           </div>
+          <br></br>
+          <br></br>
+          <div className="text-center">
+            Not registered yet?{" "}
+            <span className="link-primary" onClick={register}>
+              Sign Up
+            </span>
+          </div>
+          <br></br>
+          <br></br>
           <div className="d-grid gap-2 mt-3">
-            <button onClick={loginClick} className="btn btn-primary">
-              Login
-            </button>
+            <Button variant="dark" onClick={loginClick} className="btn btn-primary">
+              Sign In
+            </Button>
           </div>
         </div>
       </div>
     </div>
+
+
   );
 }
 

@@ -19,7 +19,13 @@ function ProfileModal(props) {
     <div>
       <div
         className="modal show"
-        style={{ display: 'block', position: 'initial' }}
+        style={{
+        display: 'block',
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+      }}
       >
         <Modal.Dialog>
           <Modal.Header>
@@ -55,8 +61,8 @@ function ProfileModal(props) {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="primary" className="updateAccount" style={{ marginRight: '10px' }} onClick={() => props.modalProfile(true, name, email)}>변경</Button>
-            <Button variant="danger" className="updateAccount" onClick={() => props.modalProfile(false, name, email)}>취소</Button>
+            <Button variant="dark" className="updateAccount" style={{ marginRight: '10px' }} onClick={() => props.modalProfile(true, name, email)}>Confirm</Button>
+            <Button variant="outline-secondary" className="updateAccount" onClick={() => props.modalProfile(false, name, email)}>Cancel</Button>
           </Modal.Footer>
         </Modal.Dialog>
       </div>
