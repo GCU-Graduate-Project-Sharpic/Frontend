@@ -12,9 +12,9 @@ function ImageListBody(props) {
   const [imageInfos, setImageInfos] = React.useState([]);
   const [modalImageId, setModalImageId] = React.useState(null);
 
-  const getImageInfos = async (imageIds) => {
+  const getImageInfos = async () => {
     let newImageInfos = [];
-    for (let imageId of imageIds) {
+    for (let imageId of props.imageIds) {
       await axios.get(window.location.origin + "/api/image/info/" + imageId)
         .then((res) => {
           newImageInfos.push({
@@ -27,11 +27,10 @@ function ImageListBody(props) {
   }
 
   React.useEffect(() => {
-    getImageInfos(props.imageIds);
+    getImageInfos();
   }, [props.imageIds])
 
   return (
-
     <div style={{ width: '100%' }} >
       <ImageUploading
         multiple
