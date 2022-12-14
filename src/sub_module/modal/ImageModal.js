@@ -113,7 +113,7 @@ function ImageModal(props) {
 
               <DropdownButton variant="secondary" title={typeButton} >
                 {/* select upper radio */}
-                <Dropdown.Item onClick={() => selectType(-1)}>Default</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(-1)}>None</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(1)}>Restoration - wo scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
@@ -123,9 +123,9 @@ function ImageModal(props) {
 
               {
                 imageInfo.info.status ? (
-                  <Button variant="outline-dark" onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ width: "100px", border: "0" }}>Run</Button>
+                  <Button variant="secondary" onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ width: "100px", border: "0" }}>Re-run</Button>
                 ) : (
-                  <Button disabled variant="light" onClick={() => setProcessing(imageInfo.id, radioValue)} style={{ width: "100px", border: "0" }}>Loading</Button>
+                  <Button disabled variant="light" style={{ width: "100px", border: "0" }}>Loading</Button>
                 )
               }
               <br />
@@ -178,7 +178,7 @@ function ImageModal(props) {
 
               <DropdownButton variant="dark" title={typeButton} >
                 {/* select upper radio */}
-                <Dropdown.Item onClick={() => selectType(-1)}>Default</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(-1)}>None</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(1)}>Restoration - wo scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
