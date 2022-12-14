@@ -53,7 +53,7 @@ function ImageListBody(props) {
           <Stack id="stackSize" className="ImageList">
             <Button
               id="uploadButton"
-              variant='primary'
+              variant='outline-dark'
               size='sm'
               onClick={onImageUpload} {...dragProps}>
               Click or Drop here

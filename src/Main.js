@@ -125,9 +125,6 @@ export default function App() {
 
         <div> {/** Main body */}
 
-          {/** Add nav bar */}
-          <AlbumNavigation albumTitle={currentAlbum.title} handleOffcanvasShow={handleOffcanvasShow} />
-
           <div direction="horizontal">
 
             <div className="SideBar">
@@ -142,6 +139,9 @@ export default function App() {
                 email={email}
               />
             </div>
+
+            {/** Add nav bar */}
+            <AlbumNavigation albumTitle={currentAlbum.title} handleOffcanvasShow={handleOffcanvasShow} />
 
 
             {/* Align each items into center */}
@@ -173,7 +173,7 @@ export default function App() {
         profileShow &&
         <ProfileModal modalProfile={modalProfile} />
       }
-      
+
     </div>
   );
 

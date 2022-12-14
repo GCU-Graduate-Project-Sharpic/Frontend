@@ -16,13 +16,13 @@ function TopBar(props) {
 
   return (
     
-    <Navbar bg="light" expand="lg">
+    <Navbar style={{backgroundColor:"#A4A4A4"}} expand="lg">
     <Container>
-      <Navbar.Brand href="/">Sharpic</Navbar.Brand>
+      <Navbar.Brand  href="/"><img src="sharpic2.png" style={{width:"120x", height:"40px"}}></img></Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
 
-        <Nav className="me-auto">
+        <Nav className="me-auto" style={{fontWeight:"bold", fontSize:"20px"}}>
           <Nav.Link href="/">Home</Nav.Link>
           <Nav.Link onClick={props.modalProfile}>Settings</Nav.Link>
           <Nav.Link href="https://github.com/GCU-Sharpic">Develper Github</Nav.Link>
