@@ -213,6 +213,7 @@ function ImageModal(props) {
           id: imageId,
           info: res.data
         });
+        props.getImageInfos()
       })
   }
 
