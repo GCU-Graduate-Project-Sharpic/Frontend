@@ -90,7 +90,7 @@ function Login(props) {
           <br></br>
           <div className="text-center">
             Not registered yet?{" "}
-            <span className="link-primary" onClick={register}>
+            <span className="link-primary" onClick={register} style={{cursor: "pointer"}}>
               Sign Up
             </span>
           </div>
