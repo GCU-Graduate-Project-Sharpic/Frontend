@@ -1,0 +1,11 @@
+.App{
+    width: 100%;
+}
+.bg-lightBorder {
+    flex: center;
+    width: 100%;
+}
+.SideBar{
+    height: 100%;
+    width: 20%;
+}

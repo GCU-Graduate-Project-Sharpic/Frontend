@@ -1,139 +1,213 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import ImageUploading from "react-images-uploading";
-import ReactDOM from "react-dom";
+
+import TopBar from './sub_module/main/TopBar';
+import OffCanvas from './sub_module/main/OffCanvas';
+
+import Stack from 'react-bootstrap/Stack';
+import "./Main.css";
+import ProfileModal from './sub_module/modal/ProfileModal';
+import ImageListBody from './sub_module/main/ImageListBody';
+import AlbumNavigation from './sub_module/main/AlbumNavigation';
+import SideBar from './sub_module/main/SideBar';
 
 export default function App() {
+  const [appShow, setAppShow] = useState(false);
 
-  const [images, setImages] = React.useState([]);
+  const [profileShow, setProfileShow] = useState(false);
+  const [offcanvasShow, setOffcanvasShow] = useState(false);
+
+  const [name, setName] = useState('Name');
+  const [email, setEmail] = useState('Email');
+
+  const handleOffcanvasShow = () => setOffcanvasShow(!offcanvasShow);
+
+  const [currentAlbum, setCurrentAlbum] = useState(null);
+  const [albumList, setAlbumList] = React.useState([])
+
   const [imageIds, setImageIds] = React.useState([]);
   const maxNumber = 69;
+
   React.useEffect(() => {
-    axios.get(window.location.href + "image/list")
+    axios.get(window.location.origin + "/api/user")
+      .catch((err) => {
+        if (err.response.status === 401) {
+          window.location.replace("/login");
+        }
+      })
       .then((res) => {
-        if (res.data.list != null) {
-          setImageIds(res.data.list);
+        setName(res.data.username);
+        setEmail(res.data.email);
+        return axios.get(window.location.origin + "/api/album/list");
+      })
+      .then((res) => {
+        setAlbumList(res.data.albumList)
+        if (currentAlbum === null) {
+          setCurrentAlbum(res.data.albumList[0]);
+          if (res.data.albumList[0].imageIds != null) {
+            setImageIds(res.data.albumList[0].imageIds)
+          }
+          setAppShow(true);
+        } else {
+          const album = res.data.albumList.find((album) => album.id === currentAlbum.id)
+          setCurrentAlbum(album)
+          setImageIds(album.imageIds);
+          setAppShow(true);
         }
       });
   }, []);
 
-  const onChange = (imageList, addUpdateIndex) => {
+  const inOffCanvas = false;
+
+  const onChange = (imageList) => {
     // data for submit
-    var ori_img_length = images.length;
-    setImages(imageList);
     const frm = new FormData();
-    for (var img of imageList.slice(ori_img_length)) {
+    for (var img of imageList) {
       frm.append("images", img.file);
     }
+    let url = window.location.origin + "/api/image/new/";
+    if (currentAlbum.id === albumList[0].id) {
+      url = url + "0";
+    } else {
+      url = url + currentAlbum.id;
+    }
     axios
-      .post(window.location.href + "image", frm, {
+      .post(url, frm, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
+      .catch((err) => {
+        console.log(err);
+        window.alert("Fail to upload image");
+      })
       .then((res) => {
-        if (res.status === "files uploaded!") {
+        if (res.data.status === "images uploaded!") {
           window.alert("Image uploaded")
+          return axios.get(window.location.origin + "/api/album/list");
         } else {
           console.log(res.status)
         }
       })
-      .catch((err) => {
-        console.log(err);
-        window.alert("Fail to upload image");
+      .then((res) => {
+        setAlbumList(res.data.albumList)
+        const album = res.data.albumList.find((album) => album.id === currentAlbum.id)
+        setCurrentAlbum(album)
+        setImageIds(album.imageIds);
       });
   };
 
   return (
-    <div>
-      <div className="App">
-        {/* header */}
-        <div className="header">
-          <img alt="setting" src="settings.png" />
-          <h1 style={{ textAlign: "center" }}>Sharpic</h1>
-        </div>
-
-        <div className="main">
-          <div className="imagetitle">
-            <img style={{ width: "3vw", height: "3vw", marginLeft: "30px", marginRight: "10px", float: "left" }} alt="book" src="book.png" />
-            <img id="share" style={{ width: "1.5vw", height: "1.5vw", marginTop: "5px", marginLeft: "10px", float: "right" }} alt="friend" src="friend.png" />
-            <img style={{ width: "1.5vw", height: "1.5vw", marginTop: "5px", marginLeft: "10px", marginRight: "10px", float: "right" }} alt="share" src="share.png" />
-            <img style={{ width: "1.5vw", height: "1.5vw", marginTop: "5px", marginLeft: "10px", marginRight: "10px", float: "right" }} alt="menu" src="menu.png" />
-            <img style={{ width: "1.5vw", height: "1.5vw", marginTop: "5px", marginLeft: "10px", marginRight: "10px", float: "right" }} alt="menu2" src="menu2.png" />
-
-            <h1 style={{ marginLeft: "40px", marginTop: "20px" }}>Seoul Travel</h1>
-          </div>
-
-          <div id="image-grid">
-            {imageIds.map((imageId, index) => (
-              <div key={index + "-grid"} className="image" style={{ float: 'left' }}>
-                <a href={window.location.href + "image/" + imageId} target="_blank" rel="noreferrer">
-                  <img src={window.location.href + "image/" + imageId} alt="" width="200" />
-                </a>
-              </div>
-            ))}
-          </div>
-
-          <div className='imgmenu'>
-            <ImageUploading
-              multiple
-              value={images}
-              onChange={onChange}
-              maxNumber={maxNumber}
-              dataURLKey="data_url"
-            >
-              {({
-                imageList,
-                onImageUpload,
-                onImageRemoveAll,
-                onImageUpdate,
-                onImageRemove,
-                isDragging,
-                dragProps
-              }) => (
-                // write your building UI
-                <div className="upload__image-wrapper">
-                  <button
-                    style={isDragging ? { color: "red" } : null}
-                    onClick={onImageUpload}
-                    {...dragProps}
-                  >
-                    Click or Drop here
-                  </button>
-                  &nbsp;
-                  <button onClick={onImageRemoveAll}>Remove all images</button>
-                  {imageList.map((image, index) => (
-                    <div key={index} className="image-item">
-                      <img src={image.data_url} alt="" width="100" />
-                      <div className="image-item__btn-wrapper">
-                        <button onClick={() => onImageUpdate(index)}>Update</button>
-                        <button onClick={() => onImageRemove(index)}>Remove</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </ImageUploading>
-          </div>
-        </div>
-
-        <div className="profile">
-          <img alt="Profile" src="user.png" />
-          <div>
-            <h1>James</h1>
-            <h4 style={{}}>example@gmail.com</h4>
-          </div>
-        </div>
-
-        <div className="menu">
-          <img alt="book" src="book.png" />
-          <h2 >Seoul Travel</h2>
-          <img alt="book" src="book2.png" />
-          <h2>Tokyo Travel</h2>
-          <img alt="book" src="book2.png" />
-          <h2>Busan Travel</h2>
-        </div>
+    appShow &&
+    <div className="App">
+      {/* header */}
+      <div className="bg-lightBorder" >
+        {/** Header */}
+        <TopBar handleOffcanvasShow={handleOffcanvasShow} modalProfile={modalProfile} />
       </div>
+
+      {/** Add some margin */}
+
+      <OffCanvas
+        handleOffcanvasShow={handleOffcanvasShow}
+        currentAlbum={currentAlbum}
+        albumList={albumList}
+        setCurrentAlbum={setCurrentAlbum}
+        setAlbumList={setAlbumList}
+        setImageIds={setImageIds}
+        offcanvasShow={offcanvasShow}
+        name={name}
+        email={email}
+      />
+
+
+      <Stack direction="vertical" gap={1} style={{ height: "100%", maxWidth: "100%" }}> {/** user profile */}
+
+        <div> {/** Main body */}
+
+          <div direction="horizontal">
+
+            <div className="SideBar">
+              <SideBar
+                inOffCanvas={inOffCanvas}
+                currentAlbum={currentAlbum}
+                albumList={albumList}
+                setCurrentAlbum={setCurrentAlbum}
+                setAlbumList={setAlbumList}
+                setImageIds={setImageIds}
+                name={name}
+                email={email}
+              />
+            </div>
+
+            {/** Add nav bar */}
+            <AlbumNavigation albumTitle={currentAlbum.title} handleOffcanvasShow={handleOffcanvasShow} />
+
+
+            {/* Align each items into center */}
+
+            <div className="d-lg-none" >
+              <ImageListBody
+                imageIds={imageIds}
+                maxNumber={maxNumber}
+                onChange={onChange}
+              />
+            </div>
+
+            <div className="d-none d-lg-block" style={{ width: '79%', float: 'right' }}>
+              <ImageListBody
+                imageIds={imageIds}
+                maxNumber={maxNumber}
+                onChange={onChange}
+              />
+            </div>
+
+          </div>
+
+        </div>
+
+      </Stack> {/** End of horizontal stack */}
+      {/* 슬라이더 팝업 */}
+
+      {
+        profileShow &&
+        <ProfileModal modalProfile={modalProfile} />
+      }
+
     </div>
   );
+
+
+  function modalProfile(change, newName, newEmail) {
+    // const modal = document.querySelector('.modal');
+    // const modal_body = document.querySelector('.modal_body');
+    const body = document.querySelector('body');
+
+    // if (modal.classList.contains('show')) {
+    //   modal.classList.remove('show');
+    //   body.style.overflow = 'auto';
+    // } else {
+    //   modal.classList.add('show');
+    //   modal_body.classList.add('show');
+    // }
+
+    if (profileShow) {
+      console.log("profile close");
+      setProfileShow(false);
+      body.style.overflow = 'auto';
+    } else {
+      console.log("profile open");
+      setProfileShow(true);
+      body.style.overflow = 'hidden';
+    }
+
+    if (change == true) {
+      // get name and mail from html form 
+
+      console.log(name);
+
+      setEmail(newEmail);
+      setName(newName);
+    }
+  }
 }

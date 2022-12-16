@@ -1,0 +1,45 @@
+#modal_modified {
+    padding: 0rem;
+}
+
+#defaultImage {
+    margin: 10px;
+    object-fit: contain;
+    /* max-width: 60%;
+    min-width: 10%; */
+}
+
+.dropDown {
+    z-index: 1;
+    margin-bottom: 10px;
+}
+.defaultButton{
+    width: 100px;
+    border: 0;
+}
+.processingImage{
+    object-fit: contain;
+    /* max-width: 80%;
+    min-width: 80%; */
+}
+
+@media (max-width:550px) {
+
+    #defaultImage {
+        margin: 0px;
+        /* max-width: 60%;
+        min-width: 10%; */
+    }
+
+    .dropDown {
+        z-index: 1;
+        margin-bottom: 10px;
+    }
+    .defaultButton{
+        border: 0; 
+    }
+
+    .processingImage{
+        object-fit: contain;
+    }
+}
