@@ -94,8 +94,6 @@ function Login(props) {
               Sign Up
             </span>
           </div>
-          <br></br>
-          <br></br>
           <div className="d-grid gap-2 mt-3">
             <Button variant="dark" onClick={loginClick} className="btn btn-primary">
               Sign In

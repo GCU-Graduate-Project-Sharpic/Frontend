@@ -17,7 +17,7 @@ function ImageModal(props) {
     { name: 'SR', value: '0' },
     { name: 'Restoration - wo scratches', value: '1' },
     { name: 'Restoration - w scratches', value: '2' },
-    { name: 'VSR', value: '3' }
+    { name: '2D SR', value: '3' }
   ]
 
   const [imageInfo, setImageInfo] = useState({ info: { status: false, up: -1 } });
@@ -115,9 +115,9 @@ function ImageModal(props) {
                 {/* select upper radio */}
                 <Dropdown.Item onClick={() => selectType(-1)}>None</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(3)}>2D SR</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(1)}>Restoration - wo scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(3)}>VSR</Dropdown.Item>
               </DropdownButton> <br />
 
 
@@ -180,9 +180,9 @@ function ImageModal(props) {
                 {/* select upper radio */}
                 <Dropdown.Item onClick={() => selectType(-1)}>None</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
+                <Dropdown.Item onClick={() => selectType(3)}>2D SR</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(1)}>Restoration - wo scratches</Dropdown.Item>
                 <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(3)}>VSR</Dropdown.Item>
               </DropdownButton> <br />
               <Button variant="secondary" onClick={() => setProcessing(imageInfo.id, radioValue)} >Run</Button>
               <br />
@@ -237,7 +237,7 @@ function ImageModal(props) {
       setRadioValue('2');
     }
     else {
-      settypeButton("VSR");
+      settypeButton("2D SR");
       setRadioValue('3');
     }
   }

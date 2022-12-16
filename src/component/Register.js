@@ -71,7 +71,6 @@ function Register(props) {
           <div className="sharpic">
           <img src="sharpic3.png" style={{ width: "319px", height: "125px"}} />
           </div>
-          <br></br>
           <div className="form-group mt-3">
             <label>User Name</label>
             <input
@@ -100,16 +99,12 @@ function Register(props) {
               onKeyDown={enterKeyPress}
             />
           </div>
-          <br></br>
-          <br></br>
           <div className="text-center">
             Already registered?{" "}
             <span className="link-primary" onClick={login}>
               Sign In
             </span>
           </div>
-          <br></br>
-          <br></br>
           <div className="d-grid gap-2 mt-3">
             <Button variant="dark" onClick={confirm} className="btn btn-primary">
               Sign up
