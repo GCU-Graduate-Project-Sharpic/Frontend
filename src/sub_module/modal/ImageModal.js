@@ -13,7 +13,7 @@ import { ReactCompareSlider, ReactCompareSliderImage, styleFitContainer } from '
 
 function ImageModal(props) {
   const radios = [
-    { name: 'Default', value: '-1' },
+    { name: 'None', value: '-1' },
     { name: 'SR', value: '0' },
     { name: 'Restoration - wo scratches', value: '1' },
     { name: 'Restoration - w scratches', value: '2' },
@@ -22,10 +22,10 @@ function ImageModal(props) {
 
   const [imageInfo, setImageInfo] = useState({ info: { status: false, up: -1 } });
 
-  const [typeButton, settypeButton] = useState('Select type');
+  const [typeButton, setTypeButton] = useState('Select type');
  
   const [radioValue, setRadioValue] = useState('0');
-  const [imgSlider, setimgSlider] = useState(true);
+  const [imgSlider, setImgSlider] = useState(true);
   const [_src, setSrc] = useState();
   const [_src2, setSrc2] = useState();
 
@@ -41,12 +41,12 @@ function ImageModal(props) {
 
   React.useEffect(() => {
     if (imageInfo.info.status) {
-      setimgSlider(true);
+      setImgSlider(true);
       setSrc(window.location.origin + "/api/image/" + props.imageId);
       setSrc2(window.location.origin + "/api/image/processed/" + props.imageId + "?temp=" + Math.random().toString(36).substring(2, 12));
       setRadioValue(imageInfo.info.up);
     } else if (imageInfo.info.up !== -1) {
-      setimgSlider(true);
+      setImgSlider(true);
       setSrc(window.location.origin + "/api/image/" + props.imageId);
       setSrc2('processing.png');
       setRadioValue(imageInfo.info.up);
@@ -61,7 +61,7 @@ function ImageModal(props) {
         clearInterval(interval);
       }, 3000)
     } else {
-      setimgSlider(false);
+      setImgSlider(false);
       setSrc(window.location.origin + "/api/image/" + props.imageId);
       setSrc2('processing.png');
       setRadioValue(imageInfo.info.up);
@@ -113,11 +113,9 @@ function ImageModal(props) {
 
               <DropdownButton variant="secondary" title={typeButton} >
                 {/* select upper radio */}
-                <Dropdown.Item onClick={() => selectType(-1)}>None</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(3)}>2D SR</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(1)}>Restoration - wo scratches</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
+                {radios.map((radio) => (
+                  <Dropdown.Item onClick={() => selectType(radio.value)}>{radio.name}</Dropdown.Item>
+                ))}
               </DropdownButton> <br />
 
 
@@ -178,11 +176,9 @@ function ImageModal(props) {
 
               <DropdownButton variant="dark" title={typeButton} >
                 {/* select upper radio */}
-                <Dropdown.Item onClick={() => selectType(-1)}>None</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(0)}>SR</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(3)}>2D SR</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(1)}>Restoration - wo scratches</Dropdown.Item>
-                <Dropdown.Item onClick={() => selectType(2)}>Restoration - w scratches</Dropdown.Item>
+                {radios.map((radio) => (
+                  <Dropdown.Item onClick={() => selectType(radio.value)}>{radio.name}</Dropdown.Item>
+                ))}
               </DropdownButton> <br />
               <Button variant="secondary" onClick={() => setProcessing(imageInfo.id, radioValue)} >Run</Button>
               <br />
@@ -218,28 +214,9 @@ function ImageModal(props) {
   }
 
   function selectType(typeValue){
-    if(typeValue === -1){
-      settypeButton("Default");
-      setRadioValue('-1');
-    }
-    else if(typeValue === 0){
-      settypeButton("SR");
-      setRadioValue('0');
-    }
-   
-    else if(typeValue === 1 ){
-      
-      settypeButton("Restoration - wo scratches");
-      setRadioValue('1');
-    }
-    else if(typeValue === 2){
-      settypeButton("Restoration - w scratches");
-      setRadioValue('2');
-    }
-    else {
-      settypeButton("2D SR");
-      setRadioValue('3');
-    }
+    const radio = radios.find((radio) => radio.value === typeValue)
+    setTypeButton(radio.name);
+    setRadioValue(radio.value);
   }
 
  

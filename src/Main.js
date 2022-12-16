@@ -6,7 +6,6 @@ import OffCanvas from './sub_module/main/OffCanvas';
 
 import Stack from 'react-bootstrap/Stack';
 import "./Main.css";
-import ProfileModal from './sub_module/modal/ProfileModal';
 import ImageListBody from './sub_module/main/ImageListBody';
 import AlbumNavigation from './sub_module/main/AlbumNavigation';
 import SideBar from './sub_module/main/SideBar';
@@ -14,7 +13,6 @@ import SideBar from './sub_module/main/SideBar';
 export default function App() {
   const [appShow, setAppShow] = useState(false);
 
-  const [profileShow, setProfileShow] = useState(false);
   const [offcanvasShow, setOffcanvasShow] = useState(false);
 
   const [name, setName] = useState('Name');
@@ -103,7 +101,11 @@ export default function App() {
       {/* header */}
       <div className="bg-lightBorder" >
         {/** Header */}
-        <TopBar handleOffcanvasShow={handleOffcanvasShow} modalProfile={modalProfile} />
+        <TopBar 
+          handleOffcanvasShow={handleOffcanvasShow} 
+          setName={setName} 
+          setEmail={setEmail}
+          />
       </div>
 
       {/** Add some margin */}
@@ -167,47 +169,6 @@ export default function App() {
         </div>
 
       </Stack> {/** End of horizontal stack */}
-      {/* 슬라이더 팝업 */}
-
-      {
-        profileShow &&
-        <ProfileModal modalProfile={modalProfile} />
-      }
-
     </div>
   );
-
-
-  function modalProfile(change, newName, newEmail) {
-    // const modal = document.querySelector('.modal');
-    // const modal_body = document.querySelector('.modal_body');
-    const body = document.querySelector('body');
-
-    // if (modal.classList.contains('show')) {
-    //   modal.classList.remove('show');
-    //   body.style.overflow = 'auto';
-    // } else {
-    //   modal.classList.add('show');
-    //   modal_body.classList.add('show');
-    // }
-
-    if (profileShow) {
-      console.log("profile close");
-      setProfileShow(false);
-      body.style.overflow = 'auto';
-    } else {
-      console.log("profile open");
-      setProfileShow(true);
-      body.style.overflow = 'hidden';
-    }
-
-    if (change == true) {
-      // get name and mail from html form 
-
-      console.log(name);
-
-      setEmail(newEmail);
-      setName(newName);
-    }
-  }
 }
