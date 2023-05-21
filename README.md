@@ -1,3 +1,42 @@
+# Frontend
+
+This is a Frontend implementation of Sharpic.
+
+## Scenario
+
+1. Visiting Sharpic Website and Login
+
+<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/a7d923d1-88e6-4b56-b5ab-7c06ab16f956" width="50%"/>
+<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/f8bb7ac6-3b87-43ef-bad5-0f6930c21d32" width="50%"/>
+
+2. Make Album and Upload Images
+
+<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/28e8d8b7-8b17-46c8-9db7-1dd3f4dc1324" width="50%"/>
+
+3. Various Image Processing Model
+
+<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/30775a54-f13d-4017-a1ca-83b6d43c3db9" width="50%"/>
+
+# Implementation
+
+### SPA
+- Single Page Application
+- Ease in building interactive web page
+### Frameworks
+- React.js
+- Supported by Meta (Facebook)
+### Advantage
+- Using JavaScript (Same as Node.js)
+- Lots of documents & use cases
+- Many additional libraries (Axios)
+### React-bootstrap
+- Use components provided by react-bootstrap for easy responsive implementation
+### Responsive Web Design
+- Responsive web design is about creating web pages that look good on all devices
+- A responsive web design will automatically adjust for different screen and viewpors.
+<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/a4426544-939f-4f52-b658-54b6d7551d80" width="50%"/>
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
