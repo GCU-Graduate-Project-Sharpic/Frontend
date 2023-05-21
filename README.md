@@ -37,6 +37,8 @@ This is a Frontend implementation of Sharpic.
 <img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/bcceed47-b9c0-4734-83d3-0e8948cbffbb" width="70%"/>
 
 # Structure
+Structure of Frontend (React Components)
+
 <img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/5926a0b6-9abf-4071-8e75-81ac30e61cd8" width="70%"/>
 
 # Getting Started with Create React App
