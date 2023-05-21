@@ -7,15 +7,15 @@ This is a Frontend implementation of Sharpic.
 1. Visiting Sharpic Website and Login
 
 <img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/a7d923d1-88e6-4b56-b5ab-7c06ab16f956" width="70%"/>
-<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/f8bb7ac6-3b87-43ef-bad5-0f6930c21d32" width="70%"/>
+<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/014e4ab3-46ec-4edd-a214-dcc3ccba9953" width="70%"/>
 
 2. Make Album and Upload Images
 
-<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/28e8d8b7-8b17-46c8-9db7-1dd3f4dc1324" width="70%"/>
+<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/f6c74860-5b1c-4435-9630-8f1ddbb7dae7" width="70%"/>
 
 3. Various Image Processing Model
 
-<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/30775a54-f13d-4017-a1ca-83b6d43c3db9" width="70%"/>
+<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/dac4d3da-bae6-48bc-bac3-9e42eeb550ba" width="70%"/>
 
 # Implementation
 
@@ -34,11 +34,10 @@ This is a Frontend implementation of Sharpic.
 ### Responsive Web Design
 - Responsive web design is about creating web pages that look good on all devices
 - A responsive web design will automatically adjust for different screen and viewpors.
-<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/a4426544-939f-4f52-b658-54b6d7551d80" width="70%"/>
+<img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/bcceed47-b9c0-4734-83d3-0e8948cbffbb" width="70%"/>
 
 # Structure
 <img src="https://github.com/GCU-Sharpic/sharpic-web/assets/68500724/5926a0b6-9abf-4071-8e75-81ac30e61cd8" width="70%"/>
-
 
 # Getting Started with Create React App
 
