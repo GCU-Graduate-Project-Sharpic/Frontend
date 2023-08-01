@@ -12,6 +12,9 @@ function SideBar(props) {
 
   function addAlbum() {
     let newAlbumTitle = window.prompt("Enter new album title");
+    if (newAlbumTitle == null || newAlbumTitle == "") {
+      return;
+    }
     axios.post(window.location.origin + "/api/album/new", {
       title: newAlbumTitle
     },
